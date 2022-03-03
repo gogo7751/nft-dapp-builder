@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { UserContext } from '../UserContex'
 import { InputLabel, MenuItem, FormControl, Select, ListSubheader, Divider } from '@mui/material'
 import { networks } from '../networks'
+import ProjectDataService from '../services/ProjectDataService'
 
 function Selector({label, items, gutterTop, gutterBottom, currentValue}) {
     const [value, setValue] = useState(currentValue)
@@ -35,21 +37,40 @@ function Selector({label, items, gutterTop, gutterBottom, currentValue}) {
 }
 
 
-function NetworkSelector({gutterTop, gutterBottom, currentValue}) {
-    const [value, setValue] = useState(currentValue)
+function NetworkSelector({value, setValue, field, subField, gutterTop, gutterBottom}) {
+    const { project, setProject } = useContext(UserContext)
     const sx = {}
     if(gutterTop) sx["marginTop"] = 4
     if(gutterBottom) sx["marginBottom"] = 4
 
+    useEffect(()=> {
+        if(field !== null && subField !== null) {
+            try {
+                const data = project[field]
+                setValue(data[subField])
+            }
+            catch (error) {
+                setValue(null)
+            }
+        }
+    }, [project, field, subField])
+
     const handleChange = (event) => {
-        setValue(event.target.value)
+        const selectedNetworkId = event.target.value
+        setValue(selectedNetworkId)
+
+        if(field !== null && subField !== null) {
+            const newProjectData = { ...project, [field]: { [subField]: selectedNetworkId }}
+            setProject(newProjectData)
+            ProjectDataService.updateProjectData(newProjectData)
+        }
     }
 
     return (
         <FormControl fullWidth sx={sx} color='secondary'>
             <InputLabel>Network</InputLabel>
             <Select
-                value={value}
+                value={value === null ? "" : value}
                 label='Network'
                 
                 onChange={handleChange}

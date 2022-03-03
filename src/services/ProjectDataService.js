@@ -6,7 +6,7 @@ import { auth } from '../firebase-config'
 
 class ProjectDataService {
 
-    createProject = async (name) => {
+    createProject = async (projectName, networkId) => {
         const projectId  = uuidv4()
         const user = auth.currentUser
         const address = user.uid
@@ -14,10 +14,10 @@ class ProjectDataService {
         // create project
         const projectData = {
             project_id: projectId,
-            name: name,
+            name: projectName,
             user: address,
             project_info: {
-                name: name
+                name: projectName
             },
             mint_section: {
                 title: "MINT YOUR NFT NOW",
@@ -36,6 +36,9 @@ class ProjectDataService {
             team_section: {
                 title: "Team",
                 display: true
+            },
+            contract: {
+                network: networkId
             }
 
         }
@@ -48,7 +51,7 @@ class ProjectDataService {
         const projectList = userData?.projects
         const projectItem = {
             project_id: projectId,
-            name: name,
+            name: projectName,
         }
 
         if( !projectList) {            

@@ -1,5 +1,4 @@
-//import React, { useState } from 'react'
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Divider, Typography } from '@mui/material'
 import { Label } from '../components/Label'
 import { NetworkSelector } from '../components/Selector'
@@ -7,7 +6,9 @@ import Panel from '../components/Panel'
 import TextInput from '../components/TextInput'
 
 
-export default function ContractEditor() {  
+export default function ContractEditor() {
+    const [networkId, setNetworkId] = useState(null)
+  
     return (
         <>
             <Typography variant='h4' sx={{marginLeft: 2, marginBottom: 2}}>
@@ -21,7 +22,8 @@ export default function ContractEditor() {
                     </Label>
 
                     <NetworkSelector 
-                        currentValue="1"
+                        value={networkId}
+                        setValue={setNetworkId}
                         field="contract"
                         subField = "network"
                         gutterBottom
