@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, List, ListItem, ListItemText, ListItemIcon, IconButton, ListItemSecondaryAction } from '@mui/material'
+import { Box, List, ListItem, ListItemText, ListItemIcon, IconButton, ListItemSecondaryAction, ListItemAvatar, Avatar } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -58,6 +58,13 @@ export default function ItemList({items, handleItemDelete, handleItemEdit, handl
                                     <ListItemIcon>
                                         <DragIndicatorIcon fontSize="small"/>
                                     </ListItemIcon>
+
+                                    {
+                                        (item.image && 
+                                            <ListItemAvatar>
+                                                <Avatar src={item?.image}/>
+                                            </ListItemAvatar>)
+                                    }
 
                                     <ListItemText
                                         primary={item.primary}
