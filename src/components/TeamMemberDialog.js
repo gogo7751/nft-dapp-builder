@@ -1,25 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { makeStyles } from '@mui/styles'
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Grid, Typography, Avatar  } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Grid } from '@mui/material'
 import AlertMessage from './Alert'
 import StorageService from '../services/StorageService'
-import PhotoIcon from '@mui/icons-material/Photo'
-
-const useStyles = makeStyles((theme) => ({
-    input: {
-        display: 'none',
-    },
-    img: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        borderRadius: '7px',
-    }
-}))
+import ImagePicker from './ImagePicker'
 
 export default function TeamMemberDialog({ dialogTitle, actionLabel, item, openItemDialog, setOpenItemDialog, handleAction, setLoading }) {
-    const classes = useStyles()    
     const [imageFile, setImageFile] = useState(null)
     const [image, setImage] = useState(null)
     const [primary, setPrimary] = useState(null)
@@ -83,38 +69,6 @@ export default function TeamMemberDialog({ dialogTitle, actionLabel, item, openI
         }
     }
 
-    const emptyImage = () => {
-        return (
-            <Box
-                display="flex"
-                alignItems="center"
-                flexDirection="column"
-                sx={{opacity: "0.6"}}
-            >
-                <Avatar sx={{marginBottom:1}}>
-                    <PhotoIcon />
-                </Avatar>
-                <Typography variant='body2'>Select Image</Typography>
-            </Box>
-        )
-    }
-
-    const previewImage = () => {
-        return (
-            <Box sx={{ height: "100%", width:"100%"}}>
-                <img 
-                    alt=""
-                    className={classes.img}
-                    src={ imageFile ? URL.createObjectURL(imageFile) : image }
-                />
-
-                <Avatar sx={{ position: 'absolute', top: '45%', left: '14.5%', }}>
-                    <PhotoIcon />
-                </Avatar>
-            </Box>
-        )
-    }
-
     return (
         <Dialog 
             open={openItemDialog} 
@@ -129,26 +83,13 @@ export default function TeamMemberDialog({ dialogTitle, actionLabel, item, openI
 
                     {/* Member Photo */}
                     <Grid item xs={4} sm={4}>
-                        <label htmlFor="contained-button-file">
-                            <Box 
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                borderRadius={2} 
-                                sx={{border: 1, height: "98%", cursor: "pointer", borderColor: 'grey.400'}}                            
-                            >
-                            { (imageFile || image) ? previewImage() : emptyImage() }                            
-                            </Box>
-                        </label>
-
-                        <input
-                            accept="image/*"
-                            className={classes.input}
-                            id="contained-button-file"
-                            multiple
-                            type="file"
-                            onChange={(e) => { setImageFile(e.target.files[0]) }}
-                        />
+                        <ImagePicker
+                            label="Member Image"
+                            maximumSize={0.5}
+                            height="98%"
+                            fromImage={image}
+                            selectFileEvent={(file) => {setImageFile(file)}}
+                        />                        
                     </Grid>
 
                     {/* Member Name */}

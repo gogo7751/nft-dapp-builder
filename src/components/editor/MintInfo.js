@@ -3,6 +3,7 @@ import { Container } from '@mui/material'
 import { Label } from '../Label'
 import Panel from '../Panel'
 import TextInput from '../TextInput'
+import ImagePicker from '../ImagePicker'
 
 export default function MintInfo() {
     return (
@@ -28,6 +29,14 @@ export default function MintInfo() {
                     subField = "subtitle"
                 />
 
+                <ImagePicker
+                    label="Background Image"
+                    field="mint_section"
+                    subField = "image"
+                    height = "230px"
+                    maximumSize={1}
+                    gutterTop
+                />
             </Panel>
         </Container>
   )
