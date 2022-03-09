@@ -53,6 +53,7 @@ function NetworkSelector({value, setValue, field, subField, gutterTop, gutterBot
                 setValue(null)
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [project, field, subField])
 
     const handleChange = (event) => {
