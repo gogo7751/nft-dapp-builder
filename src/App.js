@@ -23,6 +23,9 @@ const theme = createTheme({
     secondary: {
       main: '#262626',
     },
+    info: {
+      main: '#fff'
+    }
   },
   typography: {
     fontFamily: 'Quicksand',
