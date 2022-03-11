@@ -3,7 +3,7 @@ import { UserContext } from '../UserContex'
 import { TextField } from '@mui/material'
 import ProjectDataService from '../services/ProjectDataService'
 
-export default function TextInput({ label, placeholder, field, subField, gutterTop, gutterBottom, multiline }) {
+export default function TextInput({ label, placeholder, field, subField, gutterTop, gutterBottom, multiline, disabled }) {
     const { project, setProject } = useContext(UserContext)
     const [value, setValue] = useState(null)
     const timerRef = useRef(null)
@@ -60,6 +60,7 @@ export default function TextInput({ label, placeholder, field, subField, gutterT
                 value={value ? value : ""}
                 onChange={handleTextChange}
                 InputLabelProps={{ shrink: true }}
+                disabled={disabled}
             />   
         )
     }

@@ -37,7 +37,7 @@ function Selector({label, items, gutterTop, gutterBottom, currentValue}) {
 }
 
 
-function NetworkSelector({value, setValue, field, subField, gutterTop, gutterBottom}) {
+function NetworkSelector({value, setValue, field, subField, gutterTop, gutterBottom, disabled}) {
     const { project, setProject } = useContext(UserContext)
     const sx = {}
     if(gutterTop) sx["marginTop"] = 4
@@ -73,7 +73,7 @@ function NetworkSelector({value, setValue, field, subField, gutterTop, gutterBot
             <Select
                 value={value === null ? "" : value}
                 label='Network'
-                
+                disabled={disabled}
                 onChange={handleChange}
             >
                 <ListSubheader>Mainnet</ListSubheader>  
