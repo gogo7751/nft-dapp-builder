@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Tabs, Tab, Box, Typography } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 import ProjectInfo from '../components/editor/ProjectInfo'
 import MintInfo from '../components/editor/MintInfo'
@@ -8,6 +9,18 @@ import AboutInfo from '../components/editor/AboutInfo'
 import RoadmapInfo from '../components/editor/RoadmapInfo'
 import TeamInfo from '../components/editor/TeamInfo'
 import FaqInfo from '../components/editor/FaqInfo'
+import Gap from '../components/Gap'
+
+const useStyles = makeStyles((theme) => ({
+    div: {
+        marginTop: "-10px",
+        width: `calc(100% - 280px)`,     
+        height: "118px",
+        position: "fixed",
+        backgroundColor: '#fff',
+        zIndex: 999
+    },
+}))
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,6 +56,7 @@ function a11yProps(index) {
 }
 
 export default function WebsiteEditor() {
+    const classes = useStyles()    
     const [value, setValue] = useState(0)
 
     const handleChange = (event, newValue) => {
@@ -78,17 +92,23 @@ export default function WebsiteEditor() {
 
     return (
         <Box sx={{ width: '100%' }}>
-            <Typography variant='h4' sx={{marginLeft: 2, marginBottom: 2}}>
-                Website
-            </Typography>
+            <div className={classes.div}>
+                <Gap/>
 
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange}>
-                    { tabItems.map((item, index) => (
-                        <Tab label={item.label} key={index} {...a11yProps({index})} />
-                    )) }
-                </Tabs>
-            </Box>
+                <Typography variant='h4' sx={{marginLeft: 2, marginBottom: 2}}>
+                    Website
+                </Typography>
+
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={value} onChange={handleChange}>
+                        { tabItems.map((item, index) => (
+                            <Tab label={item.label} key={index} {...a11yProps({index})} />
+                        )) }
+                    </Tabs>
+                </Box>
+            </div>
+            
+            <Gap height="110px"/>
 
             { tabItems.map((item, index) => (
                 <TabPanel value={value} index={index} key={index}>
