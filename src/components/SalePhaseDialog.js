@@ -52,11 +52,11 @@ export default function SalePhaseDialog({ salePhaseIndex, salePhase, openDialog,
             }
             handleAction({
                 amount: salePhase?.amount,
-                mint_price: mintPrice === undefined ? "" : mintPrice,
-                mystery_box: mysteryBox === undefined ? "" : mysteryBox,
-                whitelist: whitelist === undefined ? "" : whitelist,
-                hold_token: holdToken === undefined ? "" : holdToken,
-                hold_token_contract: holdTokenContract === undefined ? "" : holdTokenContract
+                mint_price: mintPrice === undefined ? null : mintPrice,
+                mystery_box: mysteryBox === undefined ? null : mysteryBox,
+                whitelist: whitelist === undefined ? null : whitelist,
+                hold_token: holdToken === undefined ? null : holdToken,
+                hold_token_contract: holdTokenContract === undefined ? null : holdTokenContract
             })
             setOpenDialog(false)
         }

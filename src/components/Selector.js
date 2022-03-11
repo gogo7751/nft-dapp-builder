@@ -61,7 +61,8 @@ function NetworkSelector({value, setValue, field, subField, gutterTop, gutterBot
         setValue(selectedNetworkId)
 
         if(field !== null && subField !== null) {
-            const newProjectData = { ...project, [field]: { [subField]: selectedNetworkId }}
+            const data = project[field]
+            const newProjectData = { ...project, [field]: { ...data, [subField]: selectedNetworkId }}
             setProject(newProjectData)
             ProjectDataService.updateProjectData(newProjectData)
         }
