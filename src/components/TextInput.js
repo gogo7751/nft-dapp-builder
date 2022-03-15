@@ -1,92 +1,98 @@
-import React, { useState, useContext, useEffect, useRef } from 'react'
-import { UserContext } from '../UserContex'
-import { TextField } from '@mui/material'
-import ProjectDataService from '../services/ProjectDataService'
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import { UserContext } from '../UserContext';
+import { TextField } from '@mui/material';
+import ProjectDataService from '../services/ProjectDataService';
 
-export default function TextInput({ label, placeholder, field, subField, gutterTop, gutterBottom, multiline, disabled }) {
-    const { project, setProject } = useContext(UserContext)
-    const [value, setValue] = useState(null)
-    const timerRef = useRef(null)
-    const projectData = useRef(null)
-    const sx = {}
-    if(gutterTop) sx["marginTop"] = 4
-    if(gutterBottom) sx["marginBottom"] = 4
-    
-    useEffect(()=> {
-        try {
-            const data = project[field]
-            setValue(data[subField])
-        }
-        catch (error) {
-            setValue(null)
-        }
-    }, [project, field, subField])
+export default function TextInput({
+  label,
+  placeholder,
+  field,
+  subField,
+  gutterTop,
+  gutterBottom,
+  multiline,
+  disabled,
+}) {
+  const { project, setProject } = useContext(UserContext);
+  const [value, setValue] = useState(null);
+  const timerRef = useRef(null);
+  const projectData = useRef(null);
+  const sx = {};
+  if (gutterTop) sx['marginTop'] = 4;
+  if (gutterBottom) sx['marginBottom'] = 4;
 
-    const handleTextChange = (event) => {
-        const text = event.target.value
-        setValue(text)
+  useEffect(() => {
+    try {
+      const data = project[field];
+      setValue(data[subField]);
+    } catch (error) {
+      setValue(null);
+    }
+  }, [project, field, subField]);
 
-        // update project data
-        try {
-            const data = project[field]
-            const newProjectData = { ...project, [field]: { ...data, [subField]: text }}
-            setProject(newProjectData)
-            projectData.current = newProjectData
-        }
-        catch(error) {
-            const newProjectData = { ...project, [field]: { [subField]: text }}
-            setProject(newProjectData)
-            projectData.current = newProjectData
-        }
+  const handleTextChange = (event) => {
+    const text = event.target.value;
+    setValue(text);
 
-        // auto save
-        clearTimeout(timerRef.current)
-        timerRef.current = setTimeout(() => {
-            console.log("auto save...")
-            ProjectDataService.updateProjectData(projectData.current)        
-        }, 1000)
+    // update project data
+    try {
+      const data = project[field];
+      const newProjectData = {
+        ...project,
+        [field]: { ...data, [subField]: text },
+      };
+      setProject(newProjectData);
+      projectData.current = newProjectData;
+    } catch (error) {
+      const newProjectData = { ...project, [field]: { [subField]: text } };
+      setProject(newProjectData);
+      projectData.current = newProjectData;
     }
 
-    const singleLineTextField = () => {
-        return (
-            <TextField
-                sx={sx}
-                label={label}
-                fullWidth
-                size="normal"//"small"
-                placeholder={placeholder}
-                color='secondary'
-                autoComplete="off" 
-                value={value ? value : ""}
-                onChange={handleTextChange}
-                InputLabelProps={{ shrink: true }}
-                disabled={disabled}
-            />   
-        )
-    }
+    // auto save
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      console.log('auto save...');
+      ProjectDataService.updateProjectData(projectData.current);
+    }, 1000);
+  };
 
-    const multipleLinesTextField = () => {
-        return (
-            <TextField
-                sx={sx}
-                label={label}
-                fullWidth
-                size="normal"//"small"
-                placeholder={placeholder}
-                color='secondary'
-                autoComplete="off" 
-                value={value ? value : ""}
-                onChange={handleTextChange}
-                InputLabelProps={{ shrink: true }}
-                rows={4}
-                multiline
-            />   
-        )
-    }
-
+  const singleLineTextField = () => {
     return (
-        <> 
-            { multiline ? multipleLinesTextField() : singleLineTextField() } 
-        </>
-    )
+      <TextField
+        sx={sx}
+        label={label}
+        fullWidth
+        size="normal" //"small"
+        placeholder={placeholder}
+        color="secondary"
+        autoComplete="off"
+        value={value ? value : ''}
+        onChange={handleTextChange}
+        InputLabelProps={{ shrink: true }}
+        disabled={disabled}
+      />
+    );
+  };
+
+  const multipleLinesTextField = () => {
+    return (
+      <TextField
+        sx={sx}
+        label={label}
+        fullWidth
+        size="normal" //"small"
+        placeholder={placeholder}
+        color="secondary"
+        autoComplete="off"
+        value={value ? value : ''}
+        onChange={handleTextChange}
+        InputLabelProps={{ shrink: true }}
+        rows={4}
+        multiline
+      />
+    );
+  };
+
+  return <>{multiline ? multipleLinesTextField() : singleLineTextField()}</>;
 }
