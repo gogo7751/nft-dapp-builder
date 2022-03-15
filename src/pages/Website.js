@@ -7,7 +7,7 @@ import Team from '../components/website/Team';
 import Mint from '../components/website/Mint';
 import Faq from '../components/website/Faq';
 import Info from '../components/website/Info';
-import { UserContext } from '../UserContex';
+import { UserContext } from '../UserContext';
 
 export default function Website() {
   const { project } = useContext(UserContext);
