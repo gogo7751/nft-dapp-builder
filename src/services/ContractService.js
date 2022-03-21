@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import Web3 from 'web3';
 import contractJSON from '../abis/NFTPod.json';
 
 const beneficiaryAddress = '0x67a39FcA0AE0785AbCD90FA579D51a93D222D475';
@@ -32,6 +33,7 @@ class ContractService {
         tokenSymbol,
         supplyAmount,
         supplyStartIndex,
+        saleStartTime,
         price,
         maxQuantityPerMint,
         mysteryBoxes,
@@ -53,11 +55,11 @@ class ContractService {
         tokenSymbol,
         supplyAmount, // phases supply
         supplyStartIndex, // phases supply start index
+        saleStartTime, // phases sale start time
         price, // phases price in ETH
         maxQuantityPerMint, // max quantity per mint
-        beneficiaryAddress, // beneficiary/company's address
         mysteryBoxes, // is mystery box enabled in phases
-        baseURIs, // Base URIs for different phase token
+        baseURIs, // Base URIs for different phase token + unrevealedURI (if mystery box enabled)
         merkleTreeRoots, // Merkle Tree for different phase
         holdTokenAddresses // Address for NFT/Token Check
       );
@@ -67,7 +69,7 @@ class ContractService {
     }
   };
 
-  flipPhaseState = async (phaseIndex, errorHandler) => {
+  getContractBalance = async (errorHandler) => {
     try {
       const signer = this.provider.getSigner();
       const contract = new ethers.Contract(
@@ -75,13 +77,13 @@ class ContractService {
         this.contractJSON.abi,
         signer
       );
-      await contract.flipPhaseState(phaseIndex);
+      await contract.balanceOfContract();
     } catch (err) {
       errorHandler(err);
     }
   };
 
-  flipMysteryBoxState = async (phaseIndex, errorHandler) => {
+  withdrawBalance = async (errorHandler) => {
     try {
       const signer = this.provider.getSigner();
       const contract = new ethers.Contract(
@@ -89,7 +91,63 @@ class ContractService {
         this.contractJSON.abi,
         signer
       );
-      await contract.flipMysteryBoxState(phaseIndex);
+      await contract.withdraw();
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
+  flipIsSaleActive = async (errorHandler) => {
+    try {
+      const signer = this.provider.getSigner();
+      const contract = new ethers.Contract(
+        this.address,
+        this.contractJSON.abi,
+        signer
+      );
+      await contract.flipIsSaleActive();
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
+  flipToNextPhase = async (errorHandler) => {
+    try {
+      const signer = this.provider.getSigner();
+      const contract = new ethers.Contract(
+        this.address,
+        this.contractJSON.abi,
+        signer
+      );
+      await contract.flipToNextPhase();
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
+  flipMysteryBoxState = async (phaseIndex, baseURI, errorHandler) => {
+    try {
+      const signer = this.provider.getSigner();
+      const contract = new ethers.Contract(
+        this.address,
+        this.contractJSON.abi,
+        signer
+      );
+      await contract.flipMysteryBoxState(phaseIndex, baseURI);
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
+  setSaleStartTime = async (timestamp, phaseIndex, errorHandler) => {
+    try {
+      const signer = this.provider.getSigner();
+      const contract = new ethers.Contract(
+        this.address,
+        this.contractJSON.abi,
+        signer
+      );
+      await contract.setSaleStartTime(timestamp, phaseIndex);
     } catch (err) {
       errorHandler(err);
     }
@@ -124,7 +182,7 @@ class ContractService {
   };
 
   mintToken = async (mintQuantity, proofs, price, errorHandler) => {
-    // const senderHashedAddress = keccak256(account);
+    // const senderHashedAddress = Web3.utils.soliditySha3(account);
     // const proofs = merkleTree.getProof(senderHashedAddress);
     // var proofArray = [];
     // if (proofs !== []) {

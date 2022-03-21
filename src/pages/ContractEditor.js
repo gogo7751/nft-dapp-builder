@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import keccak256 from 'keccak256';
+import Web3 from 'web3';
 import MerkleTree from 'merkletreejs';
 import { makeStyles } from '@mui/styles';
 import {
@@ -184,8 +184,12 @@ export default function ContractEditor() {
     ];
     for (let i = 0; i < salePhases.length; i++) {
       if (salePhases[i]['whitelist'] === true) {
-        const leafNodes = whitelist.map((addr) => keccak256(addr));
-        const tree = new MerkleTree(leafNodes, keccak256, { sortPairs: true });
+        const leafNodes = whitelist.map((addr) =>
+          Web3.utils.soliditySha3(addr)
+        );
+        const tree = new MerkleTree(leafNodes, Web3.utils.soliditySha3, {
+          sortPairs: true,
+        });
         const root = '0x' + tree.getRoot().toString('hex');
         merkleTreeRoots.push(root);
       } else {
@@ -230,6 +234,7 @@ export default function ContractEditor() {
     const tokenSymbol = project['contract']['token_symbol'];
     const maxQuantityPerMint = project['contract']['max_quantity'];
     const salePhases = project['contract']['sale_phases'];
+    // const saleStartTime = project['contract']['sale_time'];
     const price = [];
     const supplyAmount = [];
     const mysteryBoxes = [];
@@ -262,11 +267,17 @@ export default function ContractEditor() {
       merkleTreeRoots = getMerkleRoots(salePhases);
     }
 
+    if (isMysteryBox) {
+      baseURIs.push('ipfs://FAKEri3QpTHJxXpwTeVf5PLPP4YXBzmu753Nsb71ZCFAKE');
+    }
+
     if (isHoldToken) {
       holdTokenAddresses = getTokenAddresses(salePhases);
     }
 
     const supplyStartIndex = getSupplyStartIndex(salePhases, supplyAmount);
+
+    const saleStartTime = [1647842110, 1647842110, 1647842110];
 
     return [
       contractType,
@@ -274,6 +285,7 @@ export default function ContractEditor() {
       tokenSymbol,
       supplyAmount,
       supplyStartIndex,
+      saleStartTime,
       price,
       maxQuantityPerMint,
       mysteryBoxes,
