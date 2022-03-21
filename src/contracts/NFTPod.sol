@@ -11,22 +11,25 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol"; // to use Reentra
 contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
     using Strings for uint256;
 
+    bool public isSaleActive = true;
     uint256 public currentPhase = 0;
+    uint256 public nowTokenId = 1; // tokenId start from 1
+
+    address payable public beneficiary =
+        payable(0xE29FA9849e35F96d89AA1C40Ffb5ab8F28272FF4); // beneficiary's address
+    address payable public contractOwner; // contract's owner address
 
     uint256 public immutable maxQuantityPerMint;
     uint256[] public phaseSupply;
     uint256[] public phaseSupplyStartIndex;
     uint256[] public phaseMintPrice;
     uint256[] public phaseTokenSold;
-    bool[] public isPhaseActive;
+    uint256[] public phaseSaleStartTime;
     bool[] public isMysteryBoxRevealed;
     string[] public baseURIs;
     bytes32[] public phaseMerkleRoot;
     address[] public phaseNFTAddress;
-
-    address payable public beneficiary; // company's address
-    address public contractOwner; // contract's owner address
-    uint256 public nowTokenId = 1; // tokenId start from 1
+    string unrevealedURI;
 
     /**
      * @notice Construct a NFTPod contract instance
@@ -34,11 +37,11 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
      * @param symbol Token symbol
      * @param _phaseSupply Supply for all phases, ex: [10, 20]
      * @param _phaseSupplyStartIndex Supply start index for all phases, ex: [1, 11]
+     * @param _phaseSaleStartTime Phase sale start time
      * @param _phaseMintPrice Mint price for all phases, ex: [1, 2, 3]
-     * @param _maxQuantityPerMint Max Quantity allowed per single mintm ex: 5
-     * @param _beneficiary Beneficiary address
+     * @param _maxQuantityPerMint Max quantity allowed per single mint ex: 5
      * @param isMysteryBoxEnabled Param to determine phase mystery box enabled, ex: [true, false, true]
-     * @param _baseURIs Base token URIs for all phases, ex: ["ipfs:aaa", "ipfs:bbb", "ipfs:ccc"]
+     * @param _baseURIs Base token URIs for all phases + unrevealedURI, ex: ["ipfs:aaa", "ipfs:bbb", "ipfs:ccc", "ipfs:unrevealed"]
      * @param _phaseMerkleRoot Merkle roots for all phases
      * @param _phaseNFTAddress NFT address for all phases
      */
@@ -47,9 +50,9 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         string memory symbol,
         uint256[] memory _phaseSupply,
         uint256[] memory _phaseSupplyStartIndex,
+        uint256[] memory _phaseSaleStartTime,
         uint256[] memory _phaseMintPrice,
         uint256 _maxQuantityPerMint,
-        address payable _beneficiary,
         bool[] memory isMysteryBoxEnabled,
         string[] memory _baseURIs,
         bytes32[] memory _phaseMerkleRoot,
@@ -58,77 +61,19 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         for (uint256 i = 0; i < _phaseSupply.length; i++) {
             phaseSupply.push(_phaseSupply[i]);
             phaseSupplyStartIndex.push(_phaseSupplyStartIndex[i]);
-
             phaseMintPrice.push(_phaseMintPrice[i] * 1000000000000000000); // ether to wei
-            isPhaseActive.push(false);
+            phaseSaleStartTime.push(_phaseSaleStartTime[i]);
             isMysteryBoxRevealed.push(!isMysteryBoxEnabled[i]);
             baseURIs.push(_baseURIs[i]);
             phaseMerkleRoot.push(_phaseMerkleRoot[i]);
             phaseNFTAddress.push(_phaseNFTAddress[i]);
         }
 
+        // unrevealedURI is at _baseURIs last value
+        unrevealedURI = _baseURIs[_baseURIs.length - 1];
         phaseTokenSold = new uint256[](_phaseSupply.length);
-
         maxQuantityPerMint = _maxQuantityPerMint;
-        beneficiary = _beneficiary;
-        contractOwner = msg.sender;
-    }
-
-    function getPhaseSupply() external view returns (uint256[] memory) {
-        return phaseSupply;
-    }
-
-    function getMintPrice() external view returns (uint256[] memory) {
-        return phaseMintPrice;
-    }
-
-    function getPhaseTokenSold()
-        external
-        view
-        onlyOwner
-        returns (uint256[] memory)
-    {
-        return phaseTokenSold;
-    }
-
-    function getIsPhaseActive()
-        external
-        view
-        onlyOwner
-        returns (bool[] memory)
-    {
-        return isPhaseActive;
-    }
-
-    function getIsMysteryBoxRevealed()
-        external
-        view
-        onlyOwner
-        returns (bool[] memory)
-    {
-        return isMysteryBoxRevealed;
-    }
-
-    function getBaseURI() external view returns (string[] memory) {
-        return baseURIs;
-    }
-
-    function getPhaseMerkleRoot()
-        external
-        view
-        onlyOwner
-        returns (bytes32[] memory)
-    {
-        return phaseMerkleRoot;
-    }
-
-    function getPhaseNFTAddress()
-        external
-        view
-        onlyOwner
-        returns (address[] memory)
-    {
-        return phaseNFTAddress;
+        contractOwner = payable(msg.sender);
     }
 
     function mint(uint256 mintNumber, bytes32[] calldata proof)
@@ -139,9 +84,10 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         // Gas optimization
         uint256 _nowTokenId = nowTokenId;
 
+        require(isSaleActive, "Sale not active");
         require(
-            isPhaseActive[currentPhase],
-            "Sale must be active to mint token"
+            block.timestamp > phaseSaleStartTime[currentPhase],
+            "Sale not started"
         );
         require(
             mintNumber <= maxQuantityPerMint,
@@ -156,33 +102,53 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
             phaseMintPrice[currentPhase] * mintNumber <= msg.value,
             "Ether value sent is not correct"
         );
-        require(verifyAddress(proof), "INVALID_WHITELIST_PROOF");
+        require(isValidMerkleProof(proof), "Invalid whitelist proof");
         require(
             hasTokenOfAddress(msg.sender, currentPhase),
             "Must Own NFT to mint"
         );
 
-        beneficiary.transfer((msg.value * 10) / 100); // transfer 10% to company
-        payable(contractOwner).transfer((msg.value * 90) / 100); // transfer 90% to contract owner
-
-        for (uint256 i = 1; i <= mintNumber; i++) {
+        for (uint256 i = 0; i < mintNumber; i++) {
             _safeMint(msg.sender, _nowTokenId + i);
         }
         nowTokenId += mintNumber;
+
+        // return over paid ether
+        if (msg.value > phaseMintPrice[currentPhase] * mintNumber) {
+            Address.sendValue(
+                payable(msg.sender),
+                msg.value - phaseMintPrice[currentPhase] * mintNumber
+            );
+        }
     }
 
-    function flipPhaseState(uint256 index) external onlyOwner {
-        isPhaseActive[index] = !isPhaseActive[index];
-        phaseTokenSold[currentPhase] = nowTokenId;
-        currentPhase = index;
+    function flipIsSaleActive() external onlyOwner {
+        isSaleActive = !isSaleActive;
+    }
+
+    function flipToNextPhase() external onlyOwner {
+        require(
+            currentPhase + 1 < phaseSupply.length,
+            "Already at final phase"
+        );
+        phaseTokenSold[currentPhase] =
+            nowTokenId -
+            phaseSupplyStartIndex[currentPhase];
+        currentPhase += 1;
         if (nowTokenId != phaseSupplyStartIndex[currentPhase]) {
             // shift token to next phase
             nowTokenId = phaseSupplyStartIndex[currentPhase];
         }
     }
 
-    function flipMysteryBoxState(uint256 index) external onlyOwner {
-        isMysteryBoxRevealed[index] = !isMysteryBoxRevealed[index];
+    function flipMysteryBoxState(uint256 index, string memory _uri)
+        external
+        onlyOwner
+    {
+        if (isMysteryBoxRevealed[index] == false) {
+            isMysteryBoxRevealed[index] = true;
+            baseURIs[index] = _uri;
+        }
     }
 
     function tokenURI(uint256 tokenId)
@@ -196,13 +162,11 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
             _exists(tokenId),
             "ERC721Metadata: URI query for nonexistent token"
         );
-        string
-            memory unrevealedURI = "ipfs://Qmb6ri3QpTHJxXpwTeVf5PLPP4YXBzmu753Nsb71ZCkiDo";
 
         for (uint256 i = 0; i < phaseSupply.length; i++) {
             if (
                 tokenId >= phaseSupplyStartIndex[i] &&
-                tokenId <= (phaseSupplyStartIndex[i] + phaseSupply[i]) &&
+                tokenId < (phaseSupplyStartIndex[i] + phaseSupply[i]) &&
                 isMysteryBoxRevealed[i]
             ) {
                 return
@@ -217,14 +181,18 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         external
         onlyOwner
     {
-        require(isPhaseActive[phaseIndex], "Sale must be active to mint token");
+        if (phaseIndex == currentPhase) {
+            // update token to avoid minting minted tokens
+            phaseTokenSold[currentPhase] =
+                nowTokenId -
+                phaseSupplyStartIndex[currentPhase];
+        }
 
-        // update current phase token sold to avoid minting minted token
-        phaseTokenSold[currentPhase] = nowTokenId;
-
-        // check if reserve exceed phase supply
-        uint256 startIndex = phaseTokenSold[phaseIndex];
+        // start index = start index + token sold
+        uint256 startIndex = phaseSupplyStartIndex[phaseIndex] +
+            phaseTokenSold[phaseIndex];
         uint256 endIndex = startIndex + numOfReserveToken;
+        // check if reserve exceed phase supply
         require(
             endIndex <=
                 phaseSupplyStartIndex[phaseIndex] + phaseSupply[phaseIndex],
@@ -236,12 +204,40 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         }
 
         // update token sold after reserving token
-        phaseTokenSold[phaseIndex] = endIndex;
+        phaseTokenSold[phaseIndex] += numOfReserveToken;
 
-        // update token id after reserving token
         if (phaseIndex == currentPhase) {
             nowTokenId += numOfReserveToken;
         }
+    }
+
+    function withdraw() external nonReentrant {
+        require(
+            msg.sender == beneficiary || msg.sender == contractOwner,
+            "Only beneficiary and contract owner allowed."
+        );
+        uint256 balance = address(this).balance;
+        Address.sendValue(beneficiary, (balance * 10) / 100);
+        Address.sendValue(contractOwner, (balance * 90) / 100);
+    }
+
+    function balanceOfContract() external view returns (uint256) {
+        require(
+            msg.sender == beneficiary || msg.sender == contractOwner,
+            "Only beneficiary and contract owner allowed."
+        );
+        return address(this).balance;
+    }
+
+    function setSaleStartTime(uint256 timestamp, uint256 index)
+        external
+        onlyOwner
+    {
+        require(
+            block.timestamp < phaseSaleStartTime[index],
+            "Not allowed to set already started sale"
+        );
+        phaseSaleStartTime[index] = timestamp;
     }
 
     function setMerkleRoot(bytes32 _merkleRoot, uint256 index)
@@ -251,7 +247,7 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         phaseMerkleRoot[index] = _merkleRoot;
     }
 
-    function verifyAddress(bytes32[] calldata proof)
+    function isValidMerkleProof(bytes32[] calldata proof)
         public
         view
         returns (bool)
