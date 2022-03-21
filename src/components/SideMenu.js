@@ -73,7 +73,7 @@ const sxBottomPanel = {
 
 export default function SideMenu() {
     const classes = useStyles()
-    const history = useNavigate()
+    const navigate = useNavigate()
     const location = useLocation()
 
     const menuItems = [
@@ -142,7 +142,7 @@ export default function SideMenu() {
                     <ListItem
                         button
                         key={item.text}
-                        onClick={() => history(item.path) }
+                        onClick={() => navigate(item.path) }
                         sx= { location.pathname === item.path ? sxItemSelected : sxItem }                        
                     >
                         <ListItemIcon 
@@ -169,7 +169,7 @@ export default function SideMenu() {
             >
                 { bottomMenuItems.map((item, index) => (
                     <IconButton 
-                        onClick={() => history(item.path) }
+                        onClick={() => navigate(item.path) }
                         sx={{color:'#848282'}}
                         key={index}
                     >

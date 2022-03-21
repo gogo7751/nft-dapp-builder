@@ -17,7 +17,7 @@ import { NetworkSelector } from '../components/Selector';
 import UserDataService from '../services/UserDataService';
 
 export default function ProjectDialog({ openState }) {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const { setUser, setProject, setLoading } = useContext(UserContext);
 
   const [projectName, setProjectName] = useState(null);
@@ -56,7 +56,7 @@ export default function ProjectDialog({ openState }) {
       setProjectName(null);
       setNetworkId(null);
 
-      history('/website');
+      navigate('/website');
     }
   };
 
