@@ -1,13 +1,11 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import { UserContext } from '../UserContext';
 import ProjectDataService from '../services/ProjectDataService';
 
-export default function SwitchInput({ label, field, subField }) {
+export default function SwitchInput({ sx, label, field, subField }) {
   const { project, setProject } = useContext(UserContext);
   const [value, setValue] = useState(false);
-  const timerRef = useRef(null);
-  const projectData = useRef(null);
 
   useEffect(() => {
     try {
@@ -30,24 +28,16 @@ export default function SwitchInput({ label, field, subField }) {
         [field]: { ...data, [subField]: checked },
       };
       setProject(newProjectData);
-      projectData.current = newProjectData;
+      ProjectDataService.updateProjectData(newProjectData);
     } catch (error) {
       const newProjectData = { ...project, [field]: { [subField]: checked } };
       setProject(newProjectData);
-      projectData.current = newProjectData;
     }
-
-    // auto save
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      console.log('switch auto save...');
-      ProjectDataService.updateProjectData(projectData.current);
-    }, 1000);
   };
 
   return (
     <FormControlLabel
-      sx={{ marginTop: -5, paddingRight: 2 }}
+      sx={ sx ? sx : { marginTop: -5, paddingRight: 2 }}
       value="start"
       control={
         <Switch color="primary" checked={value} onChange={handleChange} />

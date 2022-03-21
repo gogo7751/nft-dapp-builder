@@ -9,6 +9,7 @@ import ProjectDataService from './services/ProjectDataService';
 
 import Layout from './components/Layout';
 import Preview from './components/Preview';
+import Dashboard from './pages/Dashboard';
 import WebsiteEditor from './pages/WebsiteEditor';
 import ContractEditor from './pages/ContractEditor';
 import Website from './pages/Website';
@@ -89,9 +90,7 @@ function App() {
           <Layout>
             <Routes>
               <Route exact path="/" element={<Home/>} />
-              {/* <Route exact path="/dashboard">
-              <Dashboard />
-            </Route> */}
+              <Route exact path="/dashboard" element={<Dashboard />} />
 
               {/* <Route exact path="/assets">
               <Assets />

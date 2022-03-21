@@ -26,7 +26,7 @@ function Label(props) {
 
     return (
         <Typography
-            sx={sx}
+            sx={props.sx ? props.sx : sx}
             variant='h6'             
             color='text'
         >
