@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Dialog,
@@ -17,7 +17,7 @@ import { NetworkSelector } from '../components/Selector';
 import UserDataService from '../services/UserDataService';
 
 export default function ProjectDialog({ openState }) {
-  const history = useHistory();
+  const history = useNavigate();
   const { setUser, setProject, setLoading } = useContext(UserContext);
 
   const [projectName, setProjectName] = useState(null);
@@ -56,7 +56,7 @@ export default function ProjectDialog({ openState }) {
       setProjectName(null);
       setNetworkId(null);
 
-      history.push('/website');
+      history('/website');
     }
   };
 

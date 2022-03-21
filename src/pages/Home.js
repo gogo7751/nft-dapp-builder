@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   AppBar,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { user, setLoading } = useContext(UserContext);
   const [alert, setAlert] = useState('');
@@ -79,7 +79,7 @@ export default function Home() {
       // get user data
       const userData = await UserDataService.getUserData();
       if (userData.projects) {
-        history.push('/website');
+        navigate('/website');
       }
     }
     setLoading(false);

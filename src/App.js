@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase-config';
@@ -87,11 +87,8 @@ function App() {
       <Router>
         <UserContext.Provider value={value}>
           <Layout>
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-
+            <Routes>
+              <Route exact path="/" element={<Home/>} />
               {/* <Route exact path="/dashboard">
               <Dashboard />
             </Route> */}
@@ -99,21 +96,10 @@ function App() {
               {/* <Route exact path="/assets">
               <Assets />
             </Route> */}
-
-              <Route exact path="/website">
-                <WebsiteEditor />
-              </Route>
-
-              <Route exact path="/contract">
-                <ContractEditor />
-              </Route>
-
-              <Route exact path="/preview">
-                <Preview>
-                  <Website />
-                </Preview>
-              </Route>
-            </Switch>
+              <Route exact path="/website" element={<WebsiteEditor />} />
+              <Route exact path="/contract" element={<ContractEditor />} />
+              <Route exact path="/preview" element={<Preview><Website /></Preview>} />                
+            </Routes>
           </Layout>
 
           {/* Loading */}

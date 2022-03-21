@@ -1,5 +1,5 @@
 import React from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
 import { Drawer, Typography, List, ListItem, ListItemText, ListItemIcon, Stack, IconButton } from '@mui/material'
 
@@ -73,7 +73,7 @@ const sxBottomPanel = {
 
 export default function SideMenu() {
     const classes = useStyles()
-    const history = useHistory()
+    const history = useNavigate()
     const location = useLocation()
 
     const menuItems = [
@@ -142,7 +142,7 @@ export default function SideMenu() {
                     <ListItem
                         button
                         key={item.text}
-                        onClick={() => history.push(item.path) }
+                        onClick={() => history(item.path) }
                         sx= { location.pathname === item.path ? sxItemSelected : sxItem }                        
                     >
                         <ListItemIcon 
@@ -169,7 +169,7 @@ export default function SideMenu() {
             >
                 { bottomMenuItems.map((item, index) => (
                     <IconButton 
-                        onClick={() => history.push(item.path) }
+                        onClick={() => history(item.path) }
                         sx={{color:'#848282'}}
                         key={index}
                     >

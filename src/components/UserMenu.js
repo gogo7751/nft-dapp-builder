@@ -1,17 +1,17 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Menu, MenuItem, Fade } from '@mui/material'
 import AccountService from '../services/AccountService'
 
 export default function UserMenu({ userMenuState }) {
-    const history = useHistory()
+    const history = useNavigate()
     const { userMenu, setUserMenu } = userMenuState
     const openSignOut = Boolean(userMenu)    
 
     const handleSignOut = async () => {
         setUserMenu(null)
         await AccountService.signOut()
-        history.push('/')
+        history('/')
     }
 
     return (

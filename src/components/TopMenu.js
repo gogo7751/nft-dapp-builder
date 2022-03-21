@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   AppBar,
@@ -36,7 +36,7 @@ const sxAppBar = {
 };
 
 const TopMenu = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { user, setUser, setLoading, setProject } = useContext(UserContext);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
@@ -143,7 +143,7 @@ const TopMenu = () => {
   };
 
   const handleClickPreview = async () => {
-    history.push('/preview');
+    navigate('/preview');
   };
 
   return (

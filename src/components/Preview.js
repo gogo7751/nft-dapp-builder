@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { Button, AppBar, Toolbar, Stack, Box, Grid, IconButton, Typography } from '@mui/material'
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 //const Preview = ({ setGlobalState }) => {        
 const Preview = ({ children }) => {        
     const classes = useStyles()
-    const history = useHistory()
+    const navigate = useNavigate()
     const [phoneMode, setPhoneMode] = useState(false);
 
 
@@ -25,7 +25,7 @@ const Preview = ({ children }) => {
         // setGlobalState(prevGlobalState => ({
         //     enableLayout: true
         // }))
-        history.push('/website')
+        navigate('/website')
     }
 
     const sxSelected = {
