@@ -11,7 +11,11 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
+  Box,
 } from '@mui/material';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 import AlertMessage from './Alert';
 import Gap from './Gap';
 
@@ -41,6 +45,8 @@ export default function SalePhaseDialog({
   const [whitelist, setWhitelist] = useState(null);
   const [holdToken, setHoldToken] = useState(null);
   const [holdTokenContract, setHoldTokenContract] = useState(null);
+  const [beginDate, setBeginDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [alert, setAlert] = useState('');
 
   useEffect(() => {
@@ -50,6 +56,8 @@ export default function SalePhaseDialog({
     setWhitelist(salePhase?.whitelist);
     setHoldToken(salePhase?.hold_token);
     setHoldTokenContract(salePhase?.hold_token_contract);
+    setBeginDate(salePhase?.begin_date);
+    setEndDate(salePhase?.end_date);
   }, [salePhase]);
 
   const handleClose = () => {
@@ -59,6 +67,8 @@ export default function SalePhaseDialog({
     setWhitelist(salePhase?.whitelist);
     setHoldToken(salePhase?.hold_token);
     setHoldTokenContract(salePhase?.hold_token_contract);
+    setBeginDate(salePhase?.begin_date);
+    setEndDate(salePhase?.end_date);
     setOpenDialog(false);
   };
 
@@ -70,6 +80,16 @@ export default function SalePhaseDialog({
 
     if (mintPrice === '' || mintPrice === undefined) {
       setAlert('Please enter mint price');
+      return;
+    }
+
+    if (beginDate === '' || beginDate === undefined) {
+      setAlert('Please enter begin date');
+      return;
+    }
+
+    if (endDate === '' || endDate === undefined) {
+      setAlert('Please enter end date');
       return;
     }
 
@@ -88,6 +108,8 @@ export default function SalePhaseDialog({
     handleAction({
       name: name === undefined ? null : name,
       amount: salePhase?.amount,
+      begin_date: beginDate === undefined ? null : beginDate,
+      end_date: endDate === undefined ? null : endDate,
       mint_price: mintPrice === undefined ? null : mintPrice,
       mystery_box: mysteryBox === undefined ? null : mysteryBox,
       whitelist: whitelist === undefined ? null : whitelist,
@@ -112,16 +134,14 @@ export default function SalePhaseDialog({
     <Dialog
       open={openDialog}
       onClose={handleClose}
-      maxWidth={'xs'}
-      fullWidth={true}
     >
-      <DialogTitle>Sale Phase {salePhaseIndex + 1}</DialogTitle>
+      <DialogTitle>Edit Sale Phase</DialogTitle>
 
       <DialogContent>
         <TextField
           margin="dense"
           id="name"
-          label="Name"
+          label="Sale Phase Name"
           fullWidth
           autoComplete="off"
           variant="outlined"
@@ -134,7 +154,29 @@ export default function SalePhaseDialog({
           value={name ? name : ''}
         />
 
-        <Gap />
+        <Gap height="15px"/>
+
+        <Box display="flex" >
+          <LocalizationProvider dateAdapter={AdapterDateFns}>      
+            <DateTimePicker
+              label="Begin Date (Local)"
+              value={new Date(beginDate * 1000)}
+              onChange={(date) => { setBeginDate(Math.round(date.getTime() / 1000)) }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+
+            <Gap width="20px"/>
+
+            <DateTimePicker
+              label="End Date (Local)"
+              value={new Date(endDate * 1000)}
+              onChange={(date) => { setEndDate(Math.round(date.getTime() / 1000)) }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+        </Box>
+
+        <Gap height="10px"/>
 
         <TextField
           margin="dense"

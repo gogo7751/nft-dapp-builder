@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
 
 const salePhaseTableHeader = [
   'Sale Phase',
-  'Name',
   'Amount',
+  'Sales Time',
   'Mint Price',
   'Mystery Box',
   'Whitelist Access',
@@ -98,9 +98,9 @@ export default function ContractEditor() {
         key={index}
         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
       >
-        <TableCell align="center">{index + 1}</TableCell>
         <TableCell align="center">{item?.name}</TableCell>
         <TableCell align="center">{item?.amount}</TableCell>
+        <TableCell align="center">{getSalesTimeString(item?.begin_date, item?.end_date)}</TableCell>
         <TableCell align="center">
           {item?.mint_price ? item?.mint_price : '--'}
         </TableCell>
@@ -127,6 +127,22 @@ export default function ContractEditor() {
       </TableRow>
     );
   };
+
+  const getSalesTimeString = (beginDate, endDate) =>  {
+    if(beginDate && endDate) {
+      return getDateString(beginDate) + ' ~ ' + getDateString(endDate)
+    }
+    else {
+      return '--'
+    }
+  }
+
+  const getDateString = (timestamp) =>  {
+    const date = new Date(timestamp * 1000);
+    const month = date.getUTCMonth() + 1;
+    const day = date.getUTCDate();
+    return month + '/' + day
+  }
 
   const getContractAddress = () => {
     return (
@@ -350,7 +366,7 @@ export default function ContractEditor() {
 
       <Gap height="70px" />
 
-      <Container maxWidth="md">
+      <Container maxWidth="lg" sx={{width: 980}}>
         <Panel>
           <Label gutterBottom>Contract Settings</Label>
 
