@@ -7,6 +7,7 @@ import Panel from '../Panel'
 import Gap from '../Gap'
 import AlertMessage from '../Alert'
 import WhitelistDialog from './WhitelistDialog'
+import SalesTimeDialog from './SalesTimeDialog'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
@@ -38,6 +39,7 @@ export default function SalesPanel() {
     const { project, setProject, setLoading } = useContext(UserContext)
     const [salePhase, setSalePhase] = useState(null)
     const [whitelist, setWhitelist] = useState('')
+    const [openSalesTimeDialog, setOpenSalesTimeDialog] = useState(false)
     const [openWhitelistDialog, setOpenWhitelistDialog] = useState(false)
     const [alert, setAlert] = useState('')
 
@@ -129,6 +131,31 @@ export default function SalesPanel() {
             ProjectDataService.updateProjectData(newProjectData)
             setLoading(false)
         })
+    }
+
+    const handleUpdateSalesTime = async (beginDate, endDate) => {
+        setLoading(true)
+
+        const updatedSalePhase = {...salePhase,
+            ['begin_date']: beginDate,
+            ['end_date']: endDate,
+        }            
+        setSalePhase(updatedSalePhase)
+
+        const updatedSalePhases = [...salePhases.current]
+        updatedSalePhases[selected.current] = updatedSalePhase
+        salePhases.current = updatedSalePhases
+
+        const data = project['contract']
+        const newProjectData = {
+            ...project,
+            contract: { ...data, sale_phases: updatedSalePhases },
+        }
+
+        setProject(newProjectData)
+        await ProjectDataService.updateProjectData(newProjectData)
+
+        setLoading(false)
     }
 
     const handleEndSalePhase = async () => {
@@ -280,6 +307,7 @@ export default function SalesPanel() {
                         <Button
                             sx={{ marginTop:2.5, height: '35px' }}
                             disabled={getSaleState() === 'CLOSED' ? true : false}
+                            onClick={() => { setOpenSalesTimeDialog(true) }}
                         >
                             edit
                         </Button>
@@ -312,6 +340,12 @@ export default function SalesPanel() {
 
             </Panel>
 
+            <SalesTimeDialog
+                salePhase={salePhase}
+                openDialog={openSalesTimeDialog}
+                setOpenDialog={setOpenSalesTimeDialog}                
+                handleAction={handleUpdateSalesTime}
+            />
 
             <WhitelistDialog
                 salePhase={salePhase}
