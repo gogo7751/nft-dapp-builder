@@ -116,6 +116,9 @@ export default function SalePhaseDialog({
       hold_token: holdToken === undefined ? null : holdToken,
       hold_token_contract:
         holdTokenContract === undefined ? null : holdTokenContract,
+      completed: salePhase?.completed,
+      whitelist_url: salePhase?.whitelist_url,
+      whitelist_numbers: salePhase?.whitelist_numbers,
     });
     setOpenDialog(false);
   };
@@ -161,7 +164,10 @@ export default function SalePhaseDialog({
             <DateTimePicker
               label="Begin Date (Local)"
               value={new Date(beginDate * 1000)}
-              onChange={(date) => { setBeginDate(Math.round(date.getTime() / 1000)) }}
+              onChange={(date) => { 
+                date.setSeconds(0)
+                setBeginDate(Math.round(date.getTime() / 1000)) 
+              }}
               renderInput={(params) => <TextField {...params} />}
             />
 
@@ -170,7 +176,10 @@ export default function SalePhaseDialog({
             <DateTimePicker
               label="End Date (Local)"
               value={new Date(endDate * 1000)}
-              onChange={(date) => { setEndDate(Math.round(date.getTime() / 1000)) }}
+              onChange={(date) => { 
+                date.setSeconds(0)
+                setEndDate(Math.round(date.getTime() / 1000)) 
+              }}
               renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>

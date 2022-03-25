@@ -6,8 +6,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(4),
         boxShadow: '0px 0px 25px rgba(0,0,0,0.1)',        
-        marginTop: (settings) => {            
-            console.log('top', settings.top)
+        marginTop: (settings) => {
             return settings.top === undefined ? theme.spacing(4) : theme.spacing(settings.top)
         },
         marginBottom: (settings) => {

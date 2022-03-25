@@ -3,6 +3,7 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  uploadString,
 } from 'firebase/storage';
 
 class StorageService {
@@ -62,6 +63,14 @@ class StorageService {
         });
       }
     );
+  };
+
+  uploadWhitelist = async (fileName, whitelist, completion) => {
+    const storage = getStorage();
+    const storageRef = ref(storage, 'whitelists/' + fileName);
+    const uploadTask = await uploadString(storageRef, whitelist);    
+    const downloadURL = await getDownloadURL(uploadTask.ref);
+    completion(downloadURL);
   };
 }
 
