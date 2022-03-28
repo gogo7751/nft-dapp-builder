@@ -22,6 +22,7 @@ const isValidContractAddress = (address) => {
 
 export default function WhitelistDialog({salePhase, openDialog, setOpenDialog, whitelist, setWhitelist, handleAction}) {
     const [alert, setAlert] = useState('')
+    const [invalidAddress, setInvalidAddress] = useState(null)
     const orgWhitelist = useRef('')
 
     useEffect(() => {
@@ -32,30 +33,42 @@ export default function WhitelistDialog({salePhase, openDialog, setOpenDialog, w
 
     const handleSave = () => {
         const addresses = whitelist.split('\n')
-        let checkedAddresses = []
-        let checkedWhitelist = ''
+        let whitelistAddresses = []
+        let currentWhitelist = ''
 
-        // check addresses...
+        // 1. check and highlight invalid addresses
+        // 2. remove repeat addresses
         for (let i = 0; i < addresses.length; i++) {
             const address = addresses[i]
-            if(address === "" || checkedAddresses.includes(address)) { continue }
+            if(address === "" || whitelistAddresses.includes(address)) { continue }
             
             if(isValidContractAddress(address) === false) {
+                setInvalidAddress(address)
                 setAlert('Invalid address: ' + address)
                 return
             }
 
-            checkedAddresses.push(address)
-            checkedWhitelist += address + '\n'
+            whitelistAddresses.push(address)
+            currentWhitelist += address + '\n'
         }
 
         setOpenDialog(false)
-        handleAction(checkedWhitelist, orgWhitelist.current !== whitelist, checkedAddresses.length)
+        handleAction(currentWhitelist, orgWhitelist.current !== whitelist, whitelistAddresses.length)
     }
 
     const handleClose = () => {
         setOpenDialog(false)
     }
+
+    const handleFocus = (event) => {
+        if(invalidAddress === null) { return }
+
+        event.preventDefault();
+        const { target } = event;
+        const position = whitelist.search(invalidAddress);
+        target.focus();
+        target.setSelectionRange(position, position + invalidAddress.length);
+      };
 
     return (
         <Dialog
@@ -70,7 +83,7 @@ export default function WhitelistDialog({salePhase, openDialog, setOpenDialog, w
                 <TextField
                 margin="dense"
                 id="name"
-                label="Enter addresses"
+                label="Enter whitelist addresses"
                 autoFocus
                 fullWidth
                 multiline
@@ -81,6 +94,8 @@ export default function WhitelistDialog({salePhase, openDialog, setOpenDialog, w
                 inputProps = {{ spellCheck: false }}
                 onChange={(e) => { if(salePhase?.completed === false) setWhitelist(e.target.value) }}
                 size="small"
+                onFocus={handleFocus}
+                inputRef={input => invalidAddress && input && input.focus()}
                 value={whitelist}
                 />                
             </DialogContent>
