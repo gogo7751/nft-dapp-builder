@@ -97,7 +97,8 @@ function App() {
             </Route> */}
               <Route exact path="/website" element={<WebsiteEditor />} />
               <Route exact path="/contract" element={<ContractEditor />} />
-              <Route exact path="/preview" element={<Preview><Website /></Preview>} />                
+              <Route exact path="/preview" element={<Preview><Website /></Preview>} />  
+              <Route exact path="/:appUrl" element={<Website />} />                
             </Routes>
           </Layout>
 

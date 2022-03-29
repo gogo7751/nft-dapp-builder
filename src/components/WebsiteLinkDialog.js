@@ -14,6 +14,7 @@ import AlertMessage from './Alert'
 
 import { useContext } from 'react'
 import { UserContext } from '../UserContext'
+import WebsiteDataService from '../services/WebsiteDataService'
 
 const checkLinkName = (name) => {
   return /^[a-z0-9]*$/.test(name)
@@ -49,10 +50,17 @@ export default function WebsiteLinkDialog({ openState }) {
     }
     else if(checkLinkName(link) === false) {
       setAlert('Invalid website link (only accept lower case letter/ numbers)')
+    }
+    else if(await WebsiteDataService.isLinkExist(link)){
+      setAlert('Invalid website link (already exists)')
     } else {      
       setOpenLinkDialog(false)
 
       if(orgLink.current === link) { return }
+
+      if(orgLink.current && orgLink.current != link) {
+        await WebsiteDataService.deleteData(orgLink.current);
+      }
 
       setLoading(true)
             
@@ -64,6 +72,7 @@ export default function WebsiteLinkDialog({ openState }) {
         };
         setProject(newProjectData);
         await ProjectDataService.updateProjectData(newProjectData);
+        await WebsiteDataService.setData(link, project.project_id);
       } catch (error) {
         const newProjectData = { ...project, ['website']: { ['link']: link } };
         setProject(newProjectData);
