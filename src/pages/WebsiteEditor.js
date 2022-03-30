@@ -10,6 +10,7 @@ import RoadmapInfo from "../components/editor/RoadmapInfo";
 import TeamInfo from "../components/editor/TeamInfo";
 import FaqInfo from "../components/editor/FaqInfo";
 import Gap from "../components/Gap";
+import AlertMessage from "../components/Alert";
 import WebsiteDataService from "../services/WebsiteDataService";
 import ProjectDataService from "../services/ProjectDataService";
 import { UserContext } from "../UserContext";
@@ -61,6 +62,7 @@ export default function WebsiteEditor() {
   const { user, project, setProject, setLoading } = useContext(UserContext);
   const [link, setLink] = useState(null);
   const [openLinkDialog, setOpenLinkDialog] = useState(false);
+  const [alert, setAlert] = useState('')
 
   useEffect(() => {
     try {
@@ -89,6 +91,8 @@ export default function WebsiteEditor() {
       setProject(projectData);
 
       setLoading(false);
+
+      setAlert('Publish website successfully')
     } else {
       setOpenLinkDialog(true);
     }
@@ -160,6 +164,9 @@ export default function WebsiteEditor() {
 
       {/* Website Link Dialog */}
       <WebsiteLinkDialog openState={{ openLinkDialog, setOpenLinkDialog }} />
+
+      {/* Alert */}
+      <AlertMessage alertState={{ alert, setAlert, severity: 'success' }} />      
     </Box>
   );
 }
