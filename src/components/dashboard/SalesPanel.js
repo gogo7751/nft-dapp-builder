@@ -110,7 +110,7 @@ export default function SalesPanel() {
                 
         const fileName = project?.project_id + '_' + selected.current
         setLoading(true)
-        StorageService.uploadWhitelist(fileName, newWhitelist, (whitelistURL) => {
+        StorageService.uploadWhitelist(fileName, newWhitelist, async (whitelistURL) => {
             const updatedSalePhase = {...salePhase,
                 ['whitelist_url']: whitelistURL,
                 ['whitelist_numbers']: addressNumber,
@@ -128,7 +128,7 @@ export default function SalesPanel() {
             }
 
             setProject(newProjectData)
-            ProjectDataService.updateProjectData(newProjectData)
+            await ProjectDataService.updateProjectData(newProjectData)
             setLoading(false)
         })
     }
