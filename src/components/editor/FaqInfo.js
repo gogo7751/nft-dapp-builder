@@ -46,6 +46,7 @@ export default function FaqInfo() {
         const newProjectData = {
           ...project,
           faq_section: { ...data, items: items },
+          updatedDate: Math.round(new Date().getTime() / 1000),
         };
         setProject(newProjectData);
         ProjectDataService.updateProjectData(newProjectData);

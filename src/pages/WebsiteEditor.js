@@ -11,6 +11,7 @@ import TeamInfo from "../components/editor/TeamInfo";
 import FaqInfo from "../components/editor/FaqInfo";
 import Gap from "../components/Gap";
 import WebsiteDataService from "../services/WebsiteDataService";
+import ProjectDataService from "../services/ProjectDataService";
 import { UserContext } from "../UserContext";
 import WebsiteLinkDialog from "../components/WebsiteLinkDialog";
 
@@ -57,7 +58,7 @@ function a11yProps(index) {
 export default function WebsiteEditor() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const { user, project, setLoading } = useContext(UserContext);
+  const { user, project, setProject, setLoading } = useContext(UserContext);
   const [link, setLink] = useState(null);
   const [openLinkDialog, setOpenLinkDialog] = useState(false);
 
@@ -82,6 +83,11 @@ export default function WebsiteEditor() {
         user.address,
         project.project_id
       );
+
+      // sync project data
+      const projectData = await ProjectDataService.getProjectData(project.project_id);
+      setProject(projectData);
+
       setLoading(false);
     } else {
       setOpenLinkDialog(true);
@@ -125,13 +131,13 @@ export default function WebsiteEditor() {
           </Typography>
 
           <Button
-            variant="outlined"
+            variant={(project?.updatedDate === project?.publishDate) ? "outlined" : "contained"}
             sx={{ marginLeft: 2, marginTop: 0, marginBottom: 2 }}
             onClick={() => {
               handlePublish();
             }}
           >
-            publish
+            publish website
           </Button>
         </Box>
 

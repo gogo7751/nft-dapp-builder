@@ -40,11 +40,16 @@ export default function TextInput({
       const newProjectData = {
         ...project,
         [field]: { ...data, [subField]: text },
+        updatedDate: Math.round(new Date().getTime() / 1000),
       };
       setProject(newProjectData);
       projectData.current = newProjectData;
     } catch (error) {
-      const newProjectData = { ...project, [field]: { [subField]: text } };
+      const newProjectData = { 
+        ...project, 
+        [field]: { [subField]: text },
+        updatedDate: Math.round(new Date().getTime() / 1000),
+      };
       setProject(newProjectData);
       projectData.current = newProjectData;
     }

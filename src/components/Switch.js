@@ -26,11 +26,16 @@ export default function SwitchInput({ sx, label, field, subField }) {
       const newProjectData = {
         ...project,
         [field]: { ...data, [subField]: checked },
+        updatedDate: Math.round(new Date().getTime() / 1000),
       };
       setProject(newProjectData);
       ProjectDataService.updateProjectData(newProjectData);
     } catch (error) {
-      const newProjectData = { ...project, [field]: { [subField]: checked } };
+      const newProjectData = { 
+        ...project, 
+        [field]: { [subField]: checked },
+        updatedDate: Math.round(new Date().getTime() / 1000),
+      };
       setProject(newProjectData);
     }
   };

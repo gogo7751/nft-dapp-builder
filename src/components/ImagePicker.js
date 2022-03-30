@@ -153,6 +153,7 @@ export default function ImagePicker({
           const newProjectData = {
             ...project,
             [field]: { ...data, [subField]: imageURL },
+            updatedDate: Math.round(new Date().getTime() / 1000),
           };
           setProject(newProjectData);
           projectData.current = newProjectData;
@@ -160,6 +161,7 @@ export default function ImagePicker({
           const newProjectData = {
             ...project,
             [field]: { [subField]: imageURL },
+            updatedDate: Math.round(new Date().getTime() / 1000),
           };
           setProject(newProjectData);
           projectData.current = newProjectData;

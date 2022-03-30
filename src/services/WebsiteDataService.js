@@ -19,8 +19,16 @@ class WebsiteDataService {
     const projDoc = await getDoc(projRef);
     const websiteRef = doc(db, "websites", link);
     const websiteDoc = await getDoc(websiteRef);
+    const ts = Math.round(new Date().getTime() / 1000);
+    const projectData = {
+      ...projDoc.data(),
+      ['publishDate']: ts,
+      ['updatedDate']: ts,
+    };
+
     if (websiteDoc.data().user === userToken) {
-      await setDoc(doc(db, "websites", link), projDoc.data());
+      await setDoc(doc(db, "websites", link), projectData);
+      await setDoc(projRef, projectData, { merge: true });
     } else {
       console.log("user token mismatch");
     }

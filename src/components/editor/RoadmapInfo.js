@@ -46,6 +46,7 @@ export default function RoadmapInfo() {
         const newProjectData = {
           ...project,
           roadmap_section: { ...data, items: items },
+          updatedDate: Math.round(new Date().getTime() / 1000),
         };
         setProject(newProjectData);
         ProjectDataService.updateProjectData(newProjectData);

@@ -45,6 +45,7 @@ export default function TeamInfo() {
         const newProjectData = {
           ...project,
           team_section: { ...data, items: items },
+          updatedDate: Math.round(new Date().getTime() / 1000),
         };
         setProject(newProjectData);
         ProjectDataService.updateProjectData(newProjectData);
