@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Tabs, Tab, Box, Typography, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -12,6 +12,7 @@ import FaqInfo from "../components/editor/FaqInfo";
 import Gap from "../components/Gap";
 import WebsiteDataService from "../services/WebsiteDataService";
 import { UserContext } from "../UserContext";
+import WebsiteLinkDialog from "../components/WebsiteLinkDialog";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -56,19 +57,34 @@ function a11yProps(index) {
 export default function WebsiteEditor() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const { user, project } = useContext(UserContext);
+  const { user, project, setLoading } = useContext(UserContext);
+  const [link, setLink] = useState(null);
+  const [openLinkDialog, setOpenLinkDialog] = useState(false);
+
+  useEffect(() => {
+    try {
+      const data = project["website"];
+      setLink(data["link"]);
+    } catch (error) {
+      setLink(null);
+    }
+  }, [project]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const handleSync = () => {
-    if (project.website.link) {
-      WebsiteDataService.syncData(
+  const handlePublish = async () => {
+    if (link) {
+      setLoading(true);
+      await WebsiteDataService.syncData(
         project.website.link,
         user.address,
         project.project_id
       );
+      setLoading(false);
+    } else {
+      setOpenLinkDialog(true);
     }
   };
 
@@ -108,17 +124,15 @@ export default function WebsiteEditor() {
             Website
           </Typography>
 
-          {project && project.website.link && (
-            <Button
-              variant="outlined"
-              sx={{ marginLeft: 2, marginTop: 0, marginBottom: 2 }}
-              onClick={() => {
-                handleSync();
-              }}
-            >
-              Sync
-            </Button>
-          )}
+          <Button
+            variant="outlined"
+            sx={{ marginLeft: 2, marginTop: 0, marginBottom: 2 }}
+            onClick={() => {
+              handlePublish();
+            }}
+          >
+            publish
+          </Button>
         </Box>
 
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -137,6 +151,9 @@ export default function WebsiteEditor() {
           {item.content}
         </TabPanel>
       ))}
+
+      {/* Website Link Dialog */}
+      <WebsiteLinkDialog openState={{ openLinkDialog, setOpenLinkDialog }} />
     </Box>
   );
 }
