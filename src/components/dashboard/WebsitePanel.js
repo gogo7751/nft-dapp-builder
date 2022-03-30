@@ -33,6 +33,18 @@ export default function WebsitePanel() {
             return 'nftpod.app/' + link
         }
     }
+
+    const handleOpenWebsite = () =>  {
+        // get base URL
+        var currentPath = window.location.href
+        var to = currentPath.lastIndexOf('/')
+        to = to == -1 ? currentPath.length : to
+        const baseUrl = currentPath?.substring(0, to)
+
+        // user's website 
+        const websiteUrl = baseUrl + '/' + link
+        window.open(websiteUrl)
+    }
   
     return (
         <>
@@ -69,6 +81,7 @@ export default function WebsitePanel() {
                                 {getLinkUrl()}
                             </Label>
 
+                            {/* edit link */}
                             <IconButton 
                                 sx={{marginLeft: 0.5, marginTop:-1}}
                                 onClick={()=>{ setOpenLinkDialog(true) }}
@@ -76,7 +89,11 @@ export default function WebsitePanel() {
                                 <EditIcon fontSize="small" />
                             </IconButton>
 
-                            <IconButton sx={{marginLeft: -0.5, marginTop:-1}}>
+                            {/* open website */}
+                            <IconButton 
+                                sx={{marginLeft: -0.5, marginTop:-1}}
+                                onClick={handleOpenWebsite}
+                            >
                                 <LaunchIcon fontSize="small" />
                             </IconButton>
                         </Box>
