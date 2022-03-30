@@ -46,7 +46,7 @@ export default function ImagePicker({
   fromImage,
   selectFileEvent,
 }) {
-  const fileTypes = ['JPG', 'PNG', 'GIF'];
+  const fileTypes = ['JPEG', 'JPG', 'PNG', 'GIF'];
 
   const classes = useStyles();
   const { project, setProject, setLoading } = useContext(UserContext);
