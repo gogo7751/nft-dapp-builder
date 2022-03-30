@@ -15,6 +15,7 @@ import AlertMessage from './Alert'
 import { useContext } from 'react'
 import { UserContext } from '../UserContext'
 import WebsiteDataService from '../services/WebsiteDataService'
+import { layoutPaths } from './Layout'
 
 const checkLinkName = (name) => {
   return /^[a-z0-9]*$/.test(name)
@@ -50,6 +51,9 @@ export default function WebsiteLinkDialog({ openState }) {
     }
     else if(checkLinkName(link) === false) {
       setAlert('Invalid website link (only accept lower case letter/ numbers)')
+    }
+    else if(layoutPaths.includes('/' + link)) {
+      setAlert('Invalid website link')
     }
     else if(await WebsiteDataService.isLinkExist(link)){
       setAlert('Invalid website link (already exists)')

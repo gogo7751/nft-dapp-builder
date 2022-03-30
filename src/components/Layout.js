@@ -1,7 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
-//import { withGlobalState } from 'react-globally'
 
 import SideMenu from './SideMenu'
 import TopMenu from './TopMenu'
@@ -22,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
     toolbar: theme.mixins.toolbar
 }))
 
-// const Layout = ({ globalState, children }) => {
+export const layoutPaths = ['/dashboard', '/assets', '/website', '/contract']
+
 const Layout = ({ children }) => {
     const classes = useStyles()
     const location = useLocation()
@@ -46,12 +46,10 @@ const Layout = ({ children }) => {
 
     return (
         <> {
-            // globalState.enableLayout ? layoutEnabled() : layoutDisabled()
-            (location.pathname === '/preview' || location.pathname === '/') ? layoutDisabled() : layoutEnabled()
+            layoutPaths.includes(location.pathname) ? layoutEnabled() : layoutDisabled()
         }      
         </>        
   )
 }
 
 export default Layout
-//export default withGlobalState(Layout)
