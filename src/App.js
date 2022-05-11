@@ -10,6 +10,7 @@ import ProjectDataService from './services/ProjectDataService';
 import Layout from './components/Layout';
 import Preview from './components/Preview';
 import Dashboard from './pages/Dashboard';
+import Assets from './pages/Assets';
 import WebsiteEditor from './pages/WebsiteEditor';
 import ContractEditor from './pages/ContractEditor';
 import Website from './pages/Website';
@@ -91,10 +92,7 @@ function App() {
             <Routes>
               <Route exact path="/" element={<Home/>} />
               <Route exact path="/dashboard" element={<Dashboard />} />
-
-              {/* <Route exact path="/assets">
-              <Assets />
-            </Route> */}
+              <Route exact path="/assets" element={<Assets />} />
               <Route exact path="/website" element={<WebsiteEditor />} />
               <Route exact path="/contract" element={<ContractEditor />} />
               <Route exact path="/preview" element={<Preview><Website /></Preview>} />  

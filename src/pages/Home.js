@@ -79,7 +79,7 @@ export default function Home() {
       // get user data
       const userData = await UserDataService.getUserData();
       if (userData.projects) {
-        navigate('/website');
+        navigate('/dashboard');
       }
     }
     setLoading(false);

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
-import { Drawer, Typography, List, ListItem, ListItemText, ListItemIcon, Stack, IconButton } from '@mui/material'
+import { Drawer, Box, List, ListItem, ListItemText, ListItemIcon, Stack, IconButton } from '@mui/material'
 
 import HomeIcon from '@mui/icons-material/Home'
 import ImageIcon from '@mui/icons-material/Image';
@@ -12,6 +12,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import HelpIcon from '@mui/icons-material/Help'
 import YouTubeIcon from '@mui/icons-material/YouTube'
 import TwitterIcon from '@mui/icons-material/Twitter'
+import LogoImage from '../images/logo.png'
 
 const drawerWidth = 220
 const menuItemHeight = 60
@@ -23,6 +24,11 @@ const useStyles = makeStyles((theme) => ({
     drawerPaper: {
         width: drawerWidth,
     },
+    img: {
+        marginTop: '15px',
+        marginBottom: '20px',
+        width: '65%'
+    }
 }))
 
 const sxBackground = {
@@ -83,7 +89,7 @@ export default function SideMenu() {
             path: '/dashboard'
         },
         {
-            text: 'Assets',
+            text: 'NFT Collection',
             icon: <ImageIcon fontSize='small'/>,
             path: '/assets'
         },
@@ -131,11 +137,9 @@ export default function SideMenu() {
             classes={{ paper: classes.drawerPaper }}
             PaperProps={{ sx: sxBackground }}
         >
-            <div>
-                <Typography variant='h4' sx={{ m: 2 }}>
-                    LOGO
-                </Typography>
-            </div>
+            <Box display='flex' justifyContent='center'>
+                <img src={LogoImage} className={classes.img}/>
+            </Box>
 
             <List>
                 { menuItems.map(item => (

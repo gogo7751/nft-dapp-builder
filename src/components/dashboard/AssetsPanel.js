@@ -13,7 +13,7 @@ export default function AssetsPanel() {
     return (
         <>
             <Panel top={2} height={8}>
-                <Label>Assets</Label>
+                <Label>NFT Collection</Label>
                 <Label sx={sxLabel}>Total: 10,000</Label>
             </Panel>
         </>
