@@ -5,14 +5,12 @@ import { grey } from '@mui/material/colors'
 import Gap from '../components/Gap'
 import AlertMessage from '../components/Alert'
 import Panel from '../components/Panel'
-import AssetsPanel from '../components/dashboard/AssetsPanel'
-import ContractPanel from '../components/dashboard/ContractPanel'
-import WebsitePanel from '../components/dashboard/WebsitePanel'
-import SalesPanel from '../components/dashboard/SalesPanel'
 import { Label } from '../components/Label'
-import DownloadIcon from '@mui/icons-material/Download'
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
+
+import NFT_tool1 from '../images/NFT_tool1.jpg'
+import NFT_tool2 from '../images/NFT_tool2.jpg'
+import NFT_tool3 from '../images/NFT_tool3.jpg'
+import NFT_tool4 from '../images/NFT_tool4.jpg'
 
 const useStyles = makeStyles((theme) => ({
     div: {
@@ -29,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
     },
     btn: {
         color: grey[500],
+    },
+    img: {
+        marginTop: '10px',
+        width: '80%'
     }
 }))
 
@@ -53,75 +55,8 @@ export default function Assets() {
     const classes = useStyles()
     const [alert, setAlert] = useState('')
 
-    const displayInfoPanel = () =>  {
-        return (
-            <>
-            {/* <Panel top={-1}>
-                <Stack alignItems='center'>
-                    <PhotoLibraryIcon style={{ fontSize: 140, color: grey[300]  }} />
-                    <Gap height='20px'/>
-                    <Label sx={sxLabel}>You have not added any assets yet, let's add your collection to get started!</Label>                                            
-                </Stack>                
-            </Panel> */}
-
-            <Panel top={0}>
-                {/* <Divider/> */}
-                {/* <Gap height='20px'/> */}
-
-                <Label>How to create NFT collection?</Label>
-
-                <Typography>
-                Step 1. Download NFT image generator
-                </Typography>
-
-                <Box sx={sxContainer}>
-                    <Paper elevation={1}>
-                        <Stack alignItems='center'>
-                            <Gap height='20px'/>
-                            <i className="fab fa-windows" style={{fontSize: '3rem', color:'#aaa'}}></i>
-                            <Gap height='10px'/>
-                            <Typography className={classes.btn} variant='h6'>Windows</Typography>
-                            <Typography className={classes.btn} variant='caption'>Windows 64-BIT</Typography>
-                            <Gap height='10px'/>
-                            <Button 
-                                sx={{width:'85%'}}
-                                variant='contained'
-                            >
-                                Download
-                            </Button>
-                            <Gap height='15px'/>
-                        </Stack>
-                    </Paper>
-
-                    <Paper elevation={1}>
-                        <Stack alignItems='center'>
-                            <Gap height='20px'/>
-                            <i className="fab fa-apple" style={{fontSize: '3rem', color:'#aaa'}}></i>
-                            <Gap height='10px'/>
-                            <Typography className={classes.btn} variant='h6'>Mac OS</Typography>
-                            <Typography className={classes.btn} variant='caption'>Mac 64-BIT</Typography>
-                            <Gap height='10px'/>
-                            <Button 
-                                sx={{width:'85%'}}
-                                variant='contained'
-                            >
-                                Download
-                            </Button>
-                            <Gap height='15px'/>
-                        </Stack>
-                    </Paper>                                     
-                </Box>
-          
-                <Gap height='20px'/>
-                <Typography>
-                Step 2. Upload NFT collection 
-                </Typography>
-
-
-            </Panel>
-            </>
-        )
-    }
+    const handleSetData = () => {
+    };
   
     return (
         <>
@@ -133,12 +68,12 @@ export default function Assets() {
                     </Typography>
 
                     <Box display="flex" bgcolor="info.main" sx={{marginRight: 0, marginTop: 2.0}}>
-                        {/* <Button 
-                            variant='outlined' 
-                            endIcon={<DownloadIcon/>}
+                        <Button 
+                            variant='contained' 
+                            onChange={ handleSetData }
                             sx={{marginLeft: 2, marginTop: -1.35, marginBottom: 2}}>
-                                Withdraw
-                        </Button> */}
+                                set collection data
+                        </Button>
                     </Box>
                     
                 </Box>
@@ -147,10 +82,115 @@ export default function Assets() {
   
             <Gap height="100px" />
   
-            <Container maxWidth="md">
-            {/* <Container maxWidth="lg" sx={{width: 700}}> */}
-        
-                { displayInfoPanel() }
+            <Container maxWidth="md">        
+                <Panel top={0}>
+                    <Label>How to create NFT collection?</Label>
+
+                    <Typography>
+                    Step 1. Download NFT image generator
+                    </Typography>
+
+                    <Box sx={sxContainer}>
+                        <Paper elevation={1}>
+                            <Stack alignItems='center'>
+                                <Gap height='20px'/>
+                                <i className="fab fa-windows" style={{fontSize: '3rem', color:'#aaa'}}></i>
+                                <Gap height='10px'/>
+                                <Typography className={classes.btn} variant='h6'>Windows</Typography>
+                                <Typography className={classes.btn} variant='caption'>Windows 64-BIT</Typography>
+                                <Gap height='10px'/>
+                                <Button 
+                                    sx={{width:'85%'}}
+                                    variant='contained'
+                                >
+                                    Download
+                                </Button>
+                                <Gap height='15px'/>
+                            </Stack>
+                        </Paper>
+
+                        <Paper elevation={1}>
+                            <Stack alignItems='center'>
+                                <Gap height='20px'/>
+                                <i className="fab fa-apple" style={{fontSize: '3rem', color:'#aaa'}}></i>
+                                <Gap height='10px'/>
+                                <Typography className={classes.btn} variant='h6'>Mac OS</Typography>
+                                <Typography className={classes.btn} variant='caption'>Mac 64-BIT</Typography>
+                                <Gap height='10px'/>
+                                <Button 
+                                    sx={{width:'85%'}}
+                                    variant='contained'
+                                >
+                                    Download
+                                </Button>
+                                <Gap height='15px'/>
+                            </Stack>
+                        </Paper>                                     
+                    </Box>
+            
+                    <Gap height='20px'/>
+
+                    <Typography>
+                        Step 2. Manage image layers
+                    </Typography>
+
+                    <Box display="flex" justifyContent="center">
+                        <img src={NFT_tool1} className={classes.img}/>
+                    </Box>
+
+                    <Gap height='40px'/>
+
+                    <Typography>
+                        Step 3. Create generative images
+                    </Typography>
+
+                    <Box display="flex" justifyContent="center">
+                        <img src={NFT_tool2} className={classes.img}/>
+                    </Box>
+
+                    <Gap height='40px'/>
+
+                    <Typography>
+                        Step 4. Set sale phases
+                    </Typography>
+
+                    <Box display="flex" justifyContent="center">
+                        <img src={NFT_tool3} className={classes.img}/>
+                    </Box>
+
+                    <Gap height='40px'/>
+
+                    <Typography>
+                        Step 5. Upload collection and get collection data
+                    </Typography>
+
+                    <Box display="flex" justifyContent="center">
+                        <img src={NFT_tool4} className={classes.img}/>
+                    </Box>
+                    
+                    <Gap height='40px'/>
+                    
+                    <Box display="flex" >
+                        <Typography>
+                            Step 6. Click
+                        </Typography>
+
+                        <Button 
+                            variant='contained' 
+                            size='small'
+                            onChange={ handleSetData }
+                            sx={{marginLeft: 1, marginTop: -0.4, marginRight: 1}}>
+                                set collection data
+                        </Button>
+
+                        <Typography>
+                            to past collection data
+                        </Typography>
+                    </Box>
+
+                    <Gap height='20px'/>
+
+                </Panel>
 
                 {/* Alert */}
                 <AlertMessage alertState={{ alert, setAlert }} />
