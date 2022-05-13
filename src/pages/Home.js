@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -42,6 +42,12 @@ export default function Home() {
   const [alert, setAlert] = useState('');
   const [userMenu, setUserMenu] = useState(null);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
+
+  useEffect( async () => {
+    if (user?.projects) {
+      navigate('/dashboard');
+    } 
+  }, [user]);
 
   const handleSignin = async () => {
     setLoading(true);

@@ -178,7 +178,7 @@ export default function SalesPanel() {
     }
 
     const salePhaseStepControl = () => {
-        if(salePhases.current === null || salePhases.current.length <= 1 ) return (<></>)
+        if(salePhases.current === null || salePhases.current === undefined || salePhases.current?.length <= 1 ) return (<></>)
         
         return (
             <>
