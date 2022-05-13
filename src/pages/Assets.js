@@ -1,200 +1,106 @@
 import React, { useState } from 'react'
-import { Grid, Button, Box, Container, Typography, Stack, Divider, Paper  } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import { grey } from '@mui/material/colors'
-import Gap from '../components/Gap'
-import AlertMessage from '../components/Alert'
-import Panel from '../components/Panel'
-import { Label } from '../components/Label'
+import PropTypes from "prop-types"
+import { Tabs, Tab, Button, Box, Typography } from '@mui/material'
 
-import NFT_tool1 from '../images/NFT_tool1.jpg'
-import NFT_tool2 from '../images/NFT_tool2.jpg'
-import NFT_tool3 from '../images/NFT_tool3.jpg'
-import NFT_tool4 from '../images/NFT_tool4.jpg'
+import { makeStyles } from '@mui/styles'
+import Gap from '../components/Gap'
+import ToolInstruction from '../components/ToolInstruction'
 
 const useStyles = makeStyles((theme) => ({
     div: {
-        marginTop: '-10px',
+        marginTop: "-10px",
         width: `calc(100% - 280px)`,
-        height: '68px',
-        position: 'fixed',
-        backgroundColor: '#fff',
-        zIndex: 9,
+        height: "116px",
+        position: "fixed",
+        backgroundColor: "#fff",
+        zIndex: 999,
     },
-    line: {
-        height: '1px',
-        backgroundColor: '#f0f0f0',
-    },
-    btn: {
-        color: grey[500],
-    },
-    img: {
-        marginTop: '10px',
-        width: '80%'
-    }
 }))
 
-const sxLabel = {
-    fontSize: '16px',
-    // fontWeight: 'bold',
-    color:  grey[400],
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`editor-tabpanel-${index}`}
+        aria-labelledby={`editor-tab-${index}`}
+        {...other}
+      >
+        {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
+      </div>
+    );
 }
-
-const sxContainer = {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    '& > :not(style)': {
-        m: 3,
-        width: 180,
-        // height: 128,
-    },
+  
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+};
+  
+function a11yProps(index) {
+    return {
+      id: `editor-tab-${index}`,
+      "aria-controls": `editor-tabpanel-${index}`,
+    };
 }
 
 export default function Assets() {
     const classes = useStyles()
-    const [alert, setAlert] = useState('')
+    const [value, setValue] = useState(0)
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     const handleSetData = () => {
     };
+
+    const tabItems = [
+        {
+            label: "Collection Info",
+            content: <h3>collection info</h3>,
+        },        
+        {
+          label: "How to create",
+          content: <ToolInstruction handleSetData={handleSetData}/>,
+        },
+    ];    
   
     return (
-        <>
+        <Box sx={{ width: "100%" }}>
             <div className={classes.div}>
                 <Gap />
                 <Box display="flex" justifyContent="space-between">
                     <Typography variant="h4" sx={{ marginLeft: 2, marginBottom: 2 }}>
                         NFT Collection
                     </Typography>
-
-                    <Box display="flex" bgcolor="info.main" sx={{marginRight: 0, marginTop: 2.0}}>
-                        <Button 
-                            variant='contained' 
-                            onChange={ handleSetData }
-                            sx={{marginLeft: 2, marginTop: -1.35, marginBottom: 2}}>
-                                set collection data
-                        </Button>
-                    </Box>
-                    
+        
+                    <Button
+                        variant="contained"
+                        sx={{ marginLeft: 2, marginTop: 0, marginBottom: 2 }}
+                        onClick={ handleSetData }
+                    >
+                        set collection data
+                    </Button>
                 </Box>
-                <div className={classes.line}></div>
+        
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Tabs value={value} onChange={handleChange}>
+                    {tabItems.map((item, index) => (
+                        <Tab label={item.label} key={index} {...a11yProps({ index })} />
+                    ))}
+                    </Tabs>
+                </Box>
             </div>
-  
-            <Gap height="100px" />
-  
-            <Container maxWidth="md">        
-                <Panel top={0}>
-                    <Label>How to create NFT collection?</Label>
-
-                    <Typography>
-                    Step 1. Download NFT image generator
-                    </Typography>
-
-                    <Box sx={sxContainer}>
-                        <Paper elevation={1}>
-                            <Stack alignItems='center'>
-                                <Gap height='20px'/>
-                                <i className="fab fa-windows" style={{fontSize: '3rem', color:'#aaa'}}></i>
-                                <Gap height='10px'/>
-                                <Typography className={classes.btn} variant='h6'>Windows</Typography>
-                                <Typography className={classes.btn} variant='caption'>Windows 64-BIT</Typography>
-                                <Gap height='10px'/>
-                                <Button 
-                                    sx={{width:'85%'}}
-                                    variant='contained'
-                                >
-                                    Download
-                                </Button>
-                                <Gap height='15px'/>
-                            </Stack>
-                        </Paper>
-
-                        <Paper elevation={1}>
-                            <Stack alignItems='center'>
-                                <Gap height='20px'/>
-                                <i className="fab fa-apple" style={{fontSize: '3rem', color:'#aaa'}}></i>
-                                <Gap height='10px'/>
-                                <Typography className={classes.btn} variant='h6'>Mac OS</Typography>
-                                <Typography className={classes.btn} variant='caption'>Mac 64-BIT</Typography>
-                                <Gap height='10px'/>
-                                <Button 
-                                    sx={{width:'85%'}}
-                                    variant='contained'
-                                >
-                                    Download
-                                </Button>
-                                <Gap height='15px'/>
-                            </Stack>
-                        </Paper>                                     
-                    </Box>
-            
-                    <Gap height='20px'/>
-
-                    <Typography>
-                        Step 2. Manage image layers
-                    </Typography>
-
-                    <Box display="flex" justifyContent="center">
-                        <img src={NFT_tool1} className={classes.img}/>
-                    </Box>
-
-                    <Gap height='40px'/>
-
-                    <Typography>
-                        Step 3. Create generative images
-                    </Typography>
-
-                    <Box display="flex" justifyContent="center">
-                        <img src={NFT_tool2} className={classes.img}/>
-                    </Box>
-
-                    <Gap height='40px'/>
-
-                    <Typography>
-                        Step 4. Set sale phases
-                    </Typography>
-
-                    <Box display="flex" justifyContent="center">
-                        <img src={NFT_tool3} className={classes.img}/>
-                    </Box>
-
-                    <Gap height='40px'/>
-
-                    <Typography>
-                        Step 5. Upload collection and get collection data
-                    </Typography>
-
-                    <Box display="flex" justifyContent="center">
-                        <img src={NFT_tool4} className={classes.img}/>
-                    </Box>
-                    
-                    <Gap height='40px'/>
-                    
-                    <Box display="flex" >
-                        <Typography>
-                            Step 6. Click
-                        </Typography>
-
-                        <Button 
-                            variant='contained' 
-                            size='small'
-                            onChange={ handleSetData }
-                            sx={{marginLeft: 1, marginTop: -0.4, marginRight: 1}}>
-                                set collection data
-                        </Button>
-
-                        <Typography>
-                            to past collection data
-                        </Typography>
-                    </Box>
-
-                    <Gap height='20px'/>
-
-                </Panel>
-
-                {/* Alert */}
-                <AlertMessage alertState={{ alert, setAlert }} />
-            </Container>
-        </>
+    
+            <Gap height="110px" />
+    
+            {tabItems.map((item, index) => (
+                <TabPanel value={value} index={index} key={index}>
+                    {item.content}
+                </TabPanel>
+            ))}
+        </Box>    
     )
 }
