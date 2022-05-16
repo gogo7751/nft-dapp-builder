@@ -50,7 +50,7 @@ export default function ToolInstruction({ handleSetData }) {
   
     return (
         <Container maxWidth="md"> 
-            <Gap height='20px'/>
+            <Gap height='32px'/>
 
             <Panel top={0}>
                 <Label>How to create NFT collection?</Label>
