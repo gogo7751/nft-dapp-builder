@@ -4,6 +4,7 @@ import { Tabs, Tab, Button, Box, Typography } from '@mui/material'
 
 import { makeStyles } from '@mui/styles'
 import Gap from '../components/Gap'
+import CollectionData from '../components/CollectionData'
 import ToolInstruction from '../components/ToolInstruction'
 
 const useStyles = makeStyles((theme) => ({
@@ -59,7 +60,7 @@ export default function Assets() {
     const tabItems = [
         {
             label: "Collection Info",
-            content: <h3>collection info</h3>,
+            content: <CollectionData/>,
         },        
         {
           label: "How to create",
