@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import { makeStyles } from '@mui/styles';
+import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import { makeStyles } from "@mui/styles";
 import {
   Button,
   Dialog,
@@ -12,19 +12,19 @@ import {
   FormControlLabel,
   Checkbox,
   Box,
-} from '@mui/material';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateTimePicker from '@mui/lab/DateTimePicker';
-import AlertMessage from './Alert';
-import Gap from './Gap';
+} from "@mui/material";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import AlertMessage from "./Alert";
+import Gap from "./Gap";
 
 const useStyles = makeStyles((theme) => ({
   label: {
-    fontSize: '12px',
-    marginLeft: '30px',
-    marginTop: '-4px',
-    marginBottom: '14px',
+    fontSize: "12px",
+    marginLeft: "30px",
+    marginTop: "-4px",
+    marginBottom: "14px",
     // fontWeight: 'bold',
     opacity: 0.3,
   },
@@ -47,7 +47,7 @@ export default function SalePhaseDialog({
   const [holdTokenContract, setHoldTokenContract] = useState(null);
   const [beginDate, setBeginDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [alert, setAlert] = useState('');
+  const [alert, setAlert] = useState("");
 
   useEffect(() => {
     setName(salePhase?.name);
@@ -73,34 +73,34 @@ export default function SalePhaseDialog({
   };
 
   const handleUpdate = async () => {
-    if (name === '' || name === undefined) {
-      setAlert('Please enter phase name');
+    if (name === "" || name === undefined) {
+      setAlert("Please enter phase name");
       return;
     }
 
-    if (mintPrice === '' || mintPrice === undefined) {
-      setAlert('Please enter mint price');
+    if (mintPrice === "" || mintPrice === undefined) {
+      setAlert("Please enter mint price");
       return;
     }
 
-    if (beginDate === '' || beginDate === undefined) {
-      setAlert('Please enter begin date');
+    if (beginDate === "" || beginDate === undefined) {
+      setAlert("Please enter begin date");
       return;
     }
 
-    if (endDate === '' || endDate === undefined) {
-      setAlert('Please enter end date');
+    if (endDate === "" || endDate === undefined) {
+      setAlert("Please enter end date");
       return;
     }
 
     if (holdToken === true) {
-      if (holdTokenContract === '' || holdTokenContract === undefined) {
-        setAlert('Please enter token contract address');
+      if (holdTokenContract === "" || holdTokenContract === undefined) {
+        setAlert("Please enter token contract address");
         return;
       }
 
       if (!isValidContractAddress(holdTokenContract)) {
-        setAlert('Please enter valid token contract address');
+        setAlert("Please enter valid token contract address");
         return;
       }
     }
@@ -116,9 +116,14 @@ export default function SalePhaseDialog({
       hold_token: holdToken === undefined ? null : holdToken,
       hold_token_contract:
         holdTokenContract === undefined ? null : holdTokenContract,
-      completed: salePhase?.completed,
-      whitelist_url: salePhase?.whitelist_url,
-      whitelist_numbers: salePhase?.whitelist_numbers,
+      completed:
+        salePhase?.completed === undefined ? false : salePhase?.completed,
+      whitelist_url:
+        salePhase?.whitelist_url === undefined ? "" : salePhase?.whitelist_url,
+      whitelist_numbers:
+        salePhase?.whitelist_numbers === undefined
+          ? 0
+          : salePhase?.whitelist_numbers,
     });
     setOpenDialog(false);
   };
@@ -134,10 +139,7 @@ export default function SalePhaseDialog({
   };
 
   return (
-    <Dialog
-      open={openDialog}
-      onClose={handleClose}
-    >
+    <Dialog open={openDialog} onClose={handleClose}>
       <DialogTitle>Edit Sale Phase</DialogTitle>
 
       <DialogContent>
@@ -154,38 +156,38 @@ export default function SalePhaseDialog({
           }}
           size="small"
           disabled={!editable}
-          value={name ? name : ''}
+          value={name ? name : ""}
         />
 
-        <Gap height="15px"/>
+        <Gap height="15px" />
 
-        <Box display="flex" >
-          <LocalizationProvider dateAdapter={AdapterDateFns}>      
+        <Box display="flex">
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
               label="Begin Date (Local)"
               value={new Date(beginDate * 1000)}
-              onChange={(date) => { 
-                date.setSeconds(0)
-                setBeginDate(Math.round(date.getTime() / 1000)) 
+              onChange={(date) => {
+                date.setSeconds(0);
+                setBeginDate(Math.round(date.getTime() / 1000));
               }}
               renderInput={(params) => <TextField {...params} />}
             />
 
-            <Gap width="20px"/>
+            <Gap width="20px" />
 
             <DateTimePicker
               label="End Date (Local)"
               value={new Date(endDate * 1000)}
-              onChange={(date) => { 
-                date.setSeconds(0)
-                setEndDate(Math.round(date.getTime() / 1000)) 
+              onChange={(date) => {
+                date.setSeconds(0);
+                setEndDate(Math.round(date.getTime() / 1000));
               }}
               renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>
         </Box>
 
-        <Gap height="10px"/>
+        <Gap height="10px" />
 
         <TextField
           margin="dense"
@@ -197,7 +199,7 @@ export default function SalePhaseDialog({
           InputLabelProps={{ shrink: true }}
           size="small"
           disabled
-          value={salePhase?.amount ? salePhase?.amount : '0'}
+          value={salePhase?.amount ? salePhase?.amount : "0"}
         />
 
         <Gap />
@@ -215,7 +217,7 @@ export default function SalePhaseDialog({
           }}
           size="small"
           disabled={!editable}
-          value={mintPrice ? mintPrice : ''}
+          value={mintPrice ? mintPrice : ""}
         />
 
         <Gap />
@@ -270,7 +272,7 @@ export default function SalePhaseDialog({
 
           {holdToken && (
             <TextField
-              sx={{ marginLeft: '20px', marginTop: '4px', width: '360px' }}
+              sx={{ marginLeft: "20px", marginTop: "4px", width: "360px" }}
               margin="dense"
               id="name"
               label="Token contract address"
@@ -283,7 +285,7 @@ export default function SalePhaseDialog({
               onChange={(e) => {
                 setHoldTokenContract(e.target.value);
               }}
-              value={holdTokenContract ? holdTokenContract : ''}
+              value={holdTokenContract ? holdTokenContract : ""}
             />
           )}
         </FormGroup>

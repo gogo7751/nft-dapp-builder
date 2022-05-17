@@ -43,9 +43,9 @@ export default function CollectionDataDialog({
         return {
           type: salePhase?.type,
           amount: salePhase?.amount,
-          legendaryAmount: salePhase?.legendaryAmount,
-          imageCID: salePhase?.imageCID,
-          metadataCID: salePhase?.metadataCID,
+          legendary_amount: salePhase?.legendary_amount,
+          image_CID: salePhase?.image_CID,
+          metadata_CID: salePhase?.metadata_CID,
         };
       });
 
@@ -100,9 +100,9 @@ export default function CollectionDataDialog({
       const salePhase = {
         type: collectionDataJSON.salePhases[i].type,
         amount: collectionDataJSON.salePhases[i].amount,
-        legendaryAmount: collectionDataJSON.salePhases[i].legendaryAmount,
-        imageCID: collectionDataJSON.salePhases[i].imageCID,
-        metadataCID: collectionDataJSON.salePhases[i].metadataCID,
+        legendary_amount: collectionDataJSON.salePhases[i].legendaryAmount,
+        image_CID: collectionDataJSON.salePhases[i].imageCID,
+        metadata_CID: collectionDataJSON.salePhases[i].metadataCID,
       };
       if (updatedSalePhases[i] !== undefined) {
         updatedSalePhases[i] = {

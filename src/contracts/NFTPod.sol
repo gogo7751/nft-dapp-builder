@@ -103,10 +103,10 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
             "Ether value sent is not correct"
         );
         require(isValidMerkleProof(proof), "Invalid whitelist proof");
-        require(
-            hasTokenOfAddress(msg.sender, currentPhase),
-            "Must Own NFT to mint"
-        );
+        // require(
+        //     hasTokenOfAddress(msg.sender, currentPhase),
+        //     "Must Own NFT to mint"
+        // );
 
         for (uint256 i = 0; i < mintNumber; i++) {
             _safeMint(msg.sender, _nowTokenId + i);

@@ -1,8 +1,8 @@
-import { ethers } from 'ethers';
-import Web3 from 'web3';
-import contractJSON from '../abis/NFTPod.json';
+import { ethers } from "ethers";
+import Web3 from "web3";
+import contractJSON from "../abis/NFTPod.json";
 
-const beneficiaryAddress = '0x67a39FcA0AE0785AbCD90FA579D51a93D222D475';
+const beneficiaryAddress = "0xE7f72791D25ec97a94ccD0D32Aa5Ef1D9E7d83dE";
 const contracts = {
   1: contractJSON,
   2: contractJSON,
@@ -14,15 +14,31 @@ const contracts = {
   8: contractJSON,
 };
 
-class ContractService {
-  provider = new ethers.providers.Web3Provider(window.ethereum);
-  contractJSON = {};
-  address = '';
+export default class ContractService {
+  address = "";
+  contractType = 0;
+  contractJSON = contracts[0];
+
+  constructor(address = "", contractType = 0) {
+    this.address = address;
+    this.contractType = contractType;
+    this.contractJSON = contracts[contractType];
+  }
+
+  setAddress(address) {
+    this.address = address;
+  }
+
+  setContractType(contractType) {
+    this.contractType = contractType;
+    this.contractJSON = contracts[contractType];
+  }
 
   isConnectedNetworkMatch = async (networkId) => {
-    const signer = this.provider.getSigner();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
     const chainId = await signer.getChainId();
-    return chainId === networkId;
+    return parseInt(chainId) === parseInt(networkId);
   };
 
   deployContract = async (contractParams, errorHandler) => {
@@ -42,8 +58,10 @@ class ContractService {
         holdTokenAddresses,
       ] = contractParams;
 
+      this.contractType = contractType;
       this.contractJSON = contracts[contractType];
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const factory = new ethers.ContractFactory(
         this.contractJSON.abi,
         this.contractJSON.bytecode,
@@ -71,10 +89,11 @@ class ContractService {
 
   getContractBalance = async (errorHandler) => {
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
-        this.contractJSON.abi,
+        contracts[this.contractType].abi,
         signer
       );
       await contract.balanceOfContract();
@@ -85,7 +104,8 @@ class ContractService {
 
   withdrawBalance = async (errorHandler) => {
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
         this.contractJSON.abi,
@@ -99,7 +119,8 @@ class ContractService {
 
   flipIsSaleActive = async (errorHandler) => {
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
         this.contractJSON.abi,
@@ -113,7 +134,8 @@ class ContractService {
 
   flipToNextPhase = async (errorHandler) => {
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
         this.contractJSON.abi,
@@ -127,7 +149,8 @@ class ContractService {
 
   flipMysteryBoxState = async (phaseIndex, baseURI, errorHandler) => {
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
         this.contractJSON.abi,
@@ -141,7 +164,8 @@ class ContractService {
 
   setSaleStartTime = async (timestamp, phaseIndex, errorHandler) => {
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
         this.contractJSON.abi,
@@ -155,7 +179,8 @@ class ContractService {
 
   setMerkleRoot = async (root, phaseIndex, errorHandler) => {
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
         this.contractJSON.abi,
@@ -169,7 +194,8 @@ class ContractService {
 
   reserveToken = async (phaseIndex, numOfReserveToken, errorHandler) => {
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
         this.contractJSON.abi,
@@ -182,22 +208,12 @@ class ContractService {
   };
 
   mintToken = async (mintQuantity, proofs, price, errorHandler) => {
-    // const senderHashedAddress = Web3.utils.soliditySha3(account);
-    // const proofs = merkleTree.getProof(senderHashedAddress);
-    // var proofArray = [];
-    // if (proofs !== []) {
-    //   for (let i = 0; i < proofs.length; i++) {
-    //     proofArray.push(proofs[i]['data']);
-    //   }
-    // } else {
-    //   proofArray.push('');
-    // }
-
     try {
-      const signer = this.provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
-        contractJSON.abi,
+        this.contractJSON.abi,
         signer
       );
       await contract.mint(mintQuantity, proofs, {
@@ -207,6 +223,36 @@ class ContractService {
       errorHandler(err);
     }
   };
-}
 
-export default new ContractService();
+  getNowTokenId = async (errorHandler) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        this.address,
+        this.contractJSON.abi,
+        signer
+      );
+      const res = await contract.nowTokenId();
+      return res.toNumber();
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
+  getPhaseTokenSold = async (phaseIndex, errorHandler) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        this.address,
+        this.contractJSON.abi,
+        signer
+      );
+      const tokenSold = await contract.phaseTokenSold(phaseIndex);
+      return tokenSold.toNumber();
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+}

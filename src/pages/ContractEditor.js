@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import Web3 from 'web3';
-import MerkleTree from 'merkletreejs';
-import { makeStyles } from '@mui/styles';
+import React, { useState, useEffect, useContext } from "react";
+import Web3 from "web3";
+import MerkleTree from "merkletreejs";
+import keccak256 from "keccak256";
+import { makeStyles } from "@mui/styles";
 import {
   Button,
   Box,
@@ -15,56 +16,58 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@mui/material';
-import { UserContext } from '../UserContext';
-import { Label } from '../components/Label';
-import { NetworkSelector } from '../components/Selector';
-import ProjectDataService from '../services/ProjectDataService';
-import ContractService from '../services/ContractService';
-import Panel from '../components/Panel';
-import Gap from '../components/Gap';
-import TextInput from '../components/TextInput';
-import SalePhaseDialog from '../components/SalePhaseDialog';
-import EditIcon from '@mui/icons-material/Edit';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import CheckIcon from '@mui/icons-material/Check';
-import AlertMessage from '../components/Alert';
+} from "@mui/material";
+import { UserContext } from "../UserContext";
+import { Label } from "../components/Label";
+import { NetworkSelector } from "../components/Selector";
+import ProjectDataService from "../services/ProjectDataService";
+import ContractService from "../services/ContractService";
+import Panel from "../components/Panel";
+import Gap from "../components/Gap";
+import TextInput from "../components/TextInput";
+import SalePhaseDialog from "../components/SalePhaseDialog";
+import EditIcon from "@mui/icons-material/Edit";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import CheckIcon from "@mui/icons-material/Check";
+import AlertMessage from "../components/Alert";
+
+const contractService = new ContractService();
 
 const useStyles = makeStyles((theme) => ({
   div: {
-    marginTop: '-10px',
+    marginTop: "-10px",
     width: `calc(100% - 280px)`,
-    height: '68px',
-    position: 'fixed',
-    backgroundColor: '#fff',
+    height: "68px",
+    position: "fixed",
+    backgroundColor: "#fff",
     zIndex: 9,
   },
   line: {
-    height: '1px',
-    backgroundColor: '#f0f0f0',
+    height: "1px",
+    backgroundColor: "#f0f0f0",
   },
 }));
 
 const salePhaseTableHeader = [
-  'Sale Phase',
-  'Amount',
-  'Sales Time',
-  'Mint Price',
-  'Mystery Box',
-  'Whitelist Access',
-  'Token Access',
-  '',
+  "Sale Phase",
+  "Amount",
+  "Sales Time",
+  "Mint Price",
+  "Mystery Box",
+  "Whitelist Access",
+  "Token Access",
+  "",
 ];
 
 const getItemDisplay = (value) => {
-  return <>{value === true ? <CheckIcon fontSize="small" /> : '--'}</>;
+  return <>{value === true ? <CheckIcon fontSize="small" /> : "--"}</>;
 };
 
 export default function ContractEditor() {
   const classes = useStyles();
   const { project, setProject, setLoading } = useContext(UserContext);
-  const [alert, setAlert] = useState('');
+  const [alert, setAlert] = useState("");
   const [salePhases, setSalePhases] = useState([]);
   const [salePhase, setSalePhase] = useState(null);
   const [salePhaseIndex, setSalePhaseIndex] = useState(0);
@@ -76,13 +79,13 @@ export default function ContractEditor() {
     //console.log("initProjectData...")
 
     try {
-      const data = project['contract'];
+      const data = project["contract"];
       setContractAddress(
         data?.contract_address === undefined ? null : data?.contract_address
       );
       //console.log("setContractAddress", data?.contract_address)
 
-      const currentSalePhases = data['sale_phases'];
+      const currentSalePhases = data["sale_phases"];
       setSalePhases(currentSalePhases === undefined ? [] : currentSalePhases);
       //console.log("currentSalePhases", currentSalePhases)
     } catch (error) {
@@ -96,13 +99,17 @@ export default function ContractEditor() {
     return (
       <TableRow
         key={index}
-        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
         <TableCell align="center">{item?.name}</TableCell>
-        <TableCell align="center">{item?.amount}</TableCell>
-        <TableCell align="center">{getSalesTimeString(item?.begin_date, item?.end_date)}</TableCell>
         <TableCell align="center">
-          {item?.mint_price ? item?.mint_price : '--'}
+          {item?.amount + item?.legendary_amount}
+        </TableCell>
+        <TableCell align="center">
+          {getSalesTimeString(item?.begin_date, item?.end_date)}
+        </TableCell>
+        <TableCell align="center">
+          {item?.mint_price ? item?.mint_price : "--"}
         </TableCell>
         <TableCell align="center">
           {getItemDisplay(item?.mystery_box)}
@@ -128,40 +135,41 @@ export default function ContractEditor() {
     );
   };
 
-  const getSalesTimeString = (beginDate, endDate) =>  {
-    if(beginDate && endDate) {
-      return getDateString(beginDate) + ' ~ ' + getDateString(endDate)
+  const getSalesTimeString = (beginDate, endDate) => {
+    if (beginDate && endDate) {
+      return getDateString(beginDate) + " ~ " + getDateString(endDate);
+    } else {
+      return "--";
     }
-    else {
-      return '--'
-    }
-  }
+  };
 
-  const getDateString = (timestamp) =>  {
+  const getDateString = (timestamp) => {
     const date = new Date(timestamp * 1000);
     const month = date.getUTCMonth() + 1;
     const day = date.getUTCDate();
-    return month + '/' + day
-  }
+    return month + "/" + day;
+  };
 
   const getContractAddress = () => {
     return (
-      '0' +
+      "0" +
       contractAddress?.substr(1, 5) +
-      '...' +
+      "..." +
       contractAddress?.substr(contractAddress?.length - 4, 4)
     );
   };
 
   const handleSalePhaseDialogAction = (updatedSalePhase) => {
-    var index = salePhases.indexOf(salePhase);
+    const index = salePhases.indexOf(salePhase);
     const updatedSalePhases = [...salePhases];
-    updatedSalePhases[index] = updatedSalePhase;
+
+    const oldPhaseData = salePhases[index];
+    updatedSalePhases[index] = { ...oldPhaseData, ...updatedSalePhase };
     setSalePhases(updatedSalePhases);
 
     // save sale phase data
-    //console.log("save contract sale phases data", updatedSalePhases)
-    const data = project['contract'];
+    // console.log("save contract sale phases data", updatedSalePhases)
+    const data = project["contract"];
     const newProjectData = {
       ...project,
       contract: { ...data, sale_phases: updatedSalePhases },
@@ -193,24 +201,22 @@ export default function ContractEditor() {
   const getMerkleRoots = (salePhases) => {
     const merkleTreeRoots = [];
     const whitelist = [
-      '0x3613C0aD000DCB1Fd17906f506CFf48065F3eC76',
-      '0xE7f72791D25ec97a94ccD0D32Aa5Ef1D9E7d83dE',
-      '0x11aE5C23827a65845746d354e75F8fc0c1235518',
-      '0x043D0FE28915604ecdD8B706C14BEB969B32D62a',
+      "0xE7f72791D25ec97a94ccD0D32Aa5Ef1D9E7d83dE",
+      "0xb41212A9Ae065128f59217Ad4B39E6e626AC2A57",
+      "0x11aE5C23827a65845746d354e75F8fc0c1235518",
+      "0x043D0FE28915604ecdD8B706C14BEB969B32D62a",
     ];
     for (let i = 0; i < salePhases.length; i++) {
-      if (salePhases[i]['whitelist'] === true) {
-        const leafNodes = whitelist.map((addr) =>
-          Web3.utils.soliditySha3(addr)
-        );
-        const tree = new MerkleTree(leafNodes, Web3.utils.soliditySha3, {
+      if (salePhases[i]["whitelist"] === true) {
+        const leafNodes = whitelist.map((addr) => keccak256(addr));
+        const tree = new MerkleTree(leafNodes, keccak256, {
           sortPairs: true,
         });
-        const root = '0x' + tree.getRoot().toString('hex');
+        const root = "0x" + tree.getRoot().toString("hex");
         merkleTreeRoots.push(root);
       } else {
         merkleTreeRoots.push(
-          '0x0000000000000000000000000000000000000000000000000000000000000000'
+          "0x0000000000000000000000000000000000000000000000000000000000000000"
         );
       }
     }
@@ -220,10 +226,10 @@ export default function ContractEditor() {
   const getTokenAddresses = (salePhases) => {
     const holdTokenAddresses = [];
     for (let i = 0; i < salePhases.length; i++) {
-      if (salePhases[i]['hold_token'] === true) {
-        holdTokenAddresses.push(salePhases[i]['hold_token_contract']);
+      if (salePhases[i]["hold_token"] === true) {
+        holdTokenAddresses.push(salePhases[i]["hold_token_contract"]);
       } else {
-        holdTokenAddresses.push('0x0000000000000000000000000000000000000000');
+        holdTokenAddresses.push("0x0000000000000000000000000000000000000000");
       }
     }
     return holdTokenAddresses;
@@ -245,11 +251,19 @@ export default function ContractEditor() {
     return supplyStartIndex;
   };
 
+  const getSaleStartTime = (salePhases) => {
+    const saleStartTime = [];
+    for (let i = 0; i < salePhases.length; i++) {
+      saleStartTime.push(salePhases[i]["begin_date"]);
+    }
+    return saleStartTime;
+  };
+
   const getContractParams = () => {
-    const tokenName = project['contract']['token_name'];
-    const tokenSymbol = project['contract']['token_symbol'];
-    const maxQuantityPerMint = project['contract']['max_quantity'];
-    const salePhases = project['contract']['sale_phases'];
+    const tokenName = project["contract"]["token_name"];
+    const tokenSymbol = project["contract"]["token_symbol"];
+    const maxQuantityPerMint = project["contract"]["max_quantity"];
+    const salePhases = project["contract"]["sale_phases"];
     // const saleStartTime = project['contract']['sale_time'];
     const price = [];
     const supplyAmount = [];
@@ -257,20 +271,25 @@ export default function ContractEditor() {
     const baseURIs = [];
 
     let merkleTreeRoots = [];
-    let holdTokenAddresses = [];
+    let holdTokenAddresses = [
+      "0x9c58441d3AA1B156c60c521267c37086884b0619",
+      "0x9c58441d3AA1B156c60c521267c37086884b0619",
+    ];
     let isWhitelist = false;
     let isMysteryBox = false;
     let isHoldToken = false;
 
     for (let i = 0; i < salePhases.length; i++) {
-      price.push(salePhases[i]['mint_price']);
-      supplyAmount.push(salePhases[i]['amount']);
-      mysteryBoxes.push(salePhases[i]['mystery_box']);
-      baseURIs.push('ipfs://Qmb6ri3QpTHJxXpwTeVf5PLPP4YXBzmu753Nsb71ZCkiDo');
+      price.push(salePhases[i]["mint_price"]);
+      supplyAmount.push(
+        salePhases[i]["amount"] + salePhases[i]["legendary_amount"]
+      );
+      mysteryBoxes.push(salePhases[i]["mystery_box"]);
+      baseURIs.push(`ipfs://${salePhases[i]["metadata_CID"]}`);
 
-      isMysteryBox = isMysteryBox || salePhases[i]['mystery_box'];
-      isWhitelist = isWhitelist || salePhases[i]['whitelist'];
-      isHoldToken = isHoldToken || salePhases[i]['hold_token'];
+      isMysteryBox = isMysteryBox || salePhases[i]["mystery_box"];
+      isWhitelist = isWhitelist || salePhases[i]["whitelist"];
+      isHoldToken = isHoldToken || salePhases[i]["hold_token"];
     }
 
     const contractType = getContractType(
@@ -284,7 +303,16 @@ export default function ContractEditor() {
     }
 
     if (isMysteryBox) {
-      baseURIs.push('ipfs://FAKEri3QpTHJxXpwTeVf5PLPP4YXBzmu753Nsb71ZCFAKE');
+      const mysteryBoxMetadataCID =
+        project["contract"]["mystery_box_metadata_cid"];
+      if (!mysteryBoxMetadataCID) {
+        setAlert(
+          "Mystery box metadata not uploaded. Please select mystery box image in NFT Asset Generator."
+        );
+        return;
+      }
+
+      baseURIs.push(`ipfs://${mysteryBoxMetadataCID}`);
     }
 
     if (isHoldToken) {
@@ -293,7 +321,7 @@ export default function ContractEditor() {
 
     const supplyStartIndex = getSupplyStartIndex(salePhases, supplyAmount);
 
-    const saleStartTime = [1647842110, 1647842110, 1647842110];
+    const saleStartTime = getSaleStartTime(salePhases);
 
     return [
       contractType,
@@ -312,16 +340,20 @@ export default function ContractEditor() {
   };
 
   const deployContract = async () => {
-    // if (ContractService.isConnectedNetworkMatch(networkId)) {
-    //   setAlert(
-    //     'Connected network is not the selected network. Please change your connected network.'
-    //   );
-    //   return;
-    // }
+    const isConnectedNetworkMatch =
+      await contractService.isConnectedNetworkMatch(networkId);
+    if (!isConnectedNetworkMatch) {
+      setAlert(
+        "Connected network is not the selected network. Please change your connected network."
+      );
+      return;
+    }
 
     setLoading(true);
-    const contractAddress = await ContractService.deployContract(
-      getContractParams(),
+
+    const contractParams = getContractParams();
+    const contractAddress = await contractService.deployContract(
+      contractParams,
       (error) => {
         setAlert(error.message);
         return;
@@ -329,16 +361,21 @@ export default function ContractEditor() {
     );
 
     if (contractAddress !== undefined) {
-      const data = project['contract'];
+      const data = project["contract"];
       const newProjectData = {
         ...project,
-        contract: { ...data, contract_address: contractAddress },
+        contract: {
+          ...data,
+          contract_address: contractAddress,
+          contract_type: contractParams[0],
+        },
       };
       setContractAddress(contractAddress);
       setProject(newProjectData);
       ProjectDataService.updateProjectData(newProjectData);
-      console.log('CONTRACT ADDRESS: ', contractAddress);
+      // console.log("CONTRACT ADDRESS: ", contractAddress);
     }
+
     setLoading(false);
   };
 
@@ -353,12 +390,12 @@ export default function ContractEditor() {
 
           <Button
             variant="contained"
-            sx={{ height: '40px' }}
+            sx={{ height: "40px" }}
             startIcon={<RocketLaunchIcon />}
             onClick={() => deployContract()}
             disabled={contractAddress !== null}
           >
-            {contractAddress ? getContractAddress() : 'Deploy Contract'}
+            {contractAddress ? getContractAddress() : "Deploy Contract"}
           </Button>
         </Box>
         <div className={classes.line}></div>
@@ -366,7 +403,7 @@ export default function ContractEditor() {
 
       <Gap height="70px" />
 
-      <Container maxWidth="lg" sx={{width: 980}}>
+      <Container maxWidth="lg" sx={{ width: 980 }}>
         <Panel>
           <Label gutterBottom>Contract Settings</Label>
 
@@ -416,11 +453,13 @@ export default function ContractEditor() {
             <TableContainer component={Box}>
               <Table aria-label="phase table">
                 <TableHead>
-                  {salePhaseTableHeader.map((header, index) => (
-                    <TableCell key={index} align="center">
-                      {header}
-                    </TableCell>
-                  ))}
+                  <TableRow>
+                    {salePhaseTableHeader.map((header, index) => (
+                      <TableCell key={index} align="center">
+                        {header}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 </TableHead>
 
                 <TableBody>

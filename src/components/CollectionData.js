@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
   Container,
@@ -10,36 +10,34 @@ import {
   TableHead,
   TableRow,
   Link,
-} from '@mui/material';
-import { UserContext } from '../UserContext';
-import { Label } from '../components/Label';
-import Panel from '../components/Panel';
-import Gap from '../components/Gap';
-import CheckIcon from '@mui/icons-material/Check';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { grey } from '@mui/material/colors';
+} from "@mui/material";
+import { UserContext } from "../UserContext";
+import { Label } from "../components/Label";
+import Panel from "../components/Panel";
+import Gap from "../components/Gap";
+import CheckIcon from "@mui/icons-material/Check";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { grey } from "@mui/material/colors";
 
 const salePhaseTableHeader = [
-  'Sale Phase',
-  'Image CID',
-  'Metadata CID',
-  'Amount',
+  "Sale Phase",
+  "Image CID",
+  "Metadata CID",
+  "Amount",
 ];
 
 const getItemDisplay = (value) => {
-  return <>{value === true ? <CheckIcon fontSize="small" /> : '--'}</>;
+  return <>{value === true ? <CheckIcon fontSize="small" /> : "--"}</>;
 };
 
 export default function CollectionData() {
   const { project } = useContext(UserContext);
   const [salePhases, setSalePhases] = useState([]);
 
-
   useEffect(() => {
-
     try {
-      const data = project['contract'];
-      const currentSalePhases = data['sale_phases'];
+      const data = project["contract"];
+      const currentSalePhases = data["sale_phases"];
       setSalePhases(currentSalePhases === undefined ? [] : currentSalePhases);
     } catch (error) {
       setSalePhases([]);
@@ -52,7 +50,7 @@ export default function CollectionData() {
     return (
       <TableRow
         key={index}
-        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
         <TableCell align="center">{item?.name}</TableCell>
         <TableCell align="center">{item?.amount}</TableCell>
@@ -68,15 +66,17 @@ export default function CollectionData() {
         display="flex"
         alignItems="center"
         flexDirection="column"
-        sx={{ opacity: '0.3' }}
+        sx={{ opacity: "0.3" }}
       >
         <AddPhotoAlternateIcon style={{ fontSize: 100, color: grey[500] }} />
-        <Typography sx={{ fontSize: 16, color: (theme) => theme.palette.grey[600] }}>
-            You havn't set collection data yet.
-        </Typography>        
+        <Typography
+          sx={{ fontSize: 16, color: (theme) => theme.palette.grey[600] }}
+        >
+          You havn't set collection data yet.
+        </Typography>
       </Box>
-    )
-  }
+    );
+  };
 
   const collectionInfo = () => {
     return (
@@ -85,11 +85,13 @@ export default function CollectionData() {
         <TableContainer component={Box}>
           <Table aria-label="phase table">
             <TableHead>
-              {salePhaseTableHeader.map((header, index) => (
-                <TableCell key={index} align="center">
-                  {header}
-                </TableCell>
-              ))}
+              <TableRow>
+                {salePhaseTableHeader.map((header, index) => (
+                  <TableCell key={index} align="center">
+                    {header}
+                  </TableCell>
+                ))}
+              </TableRow>
             </TableHead>
 
             <TableBody>
@@ -99,36 +101,40 @@ export default function CollectionData() {
             </TableBody>
           </Table>
         </TableContainer>
-          
+
         <Label gutterTop>Mystery Box Image</Label>
-          
-        <Box display='flex'>
+
+        <Box display="flex">
           <Typography sx={{ marginLeft: 4, fontSize: 14 }}>
             Image CID:
           </Typography>
 
-          <Link sx={{ marginLeft: 1, fontSize: 14 }} href="#">Link</Link>              
+          <Link sx={{ marginLeft: 1, fontSize: 14 }} href="#">
+            Link
+          </Link>
         </Box>
 
-        <Gap height='8px'/>
+        <Gap height="8px" />
 
-        <Box display='flex'>
+        <Box display="flex">
           <Typography sx={{ marginLeft: 4, fontSize: 14 }}>
-              Metadata CID:
+            Metadata CID:
           </Typography>
 
-          <Link sx={{ marginLeft: 1, fontSize: 14 }} href="#">Link</Link>              
+          <Link sx={{ marginLeft: 1, fontSize: 14 }} href="#">
+            Link
+          </Link>
         </Box>
       </>
-    )
-  }
+    );
+  };
 
   return (
     <>
       <Container maxWidth="md">
         <Panel>
-        {salePhases.length === 0 ? noCollectionInfo() : collectionInfo()}
-        </Panel>       
+          {salePhases.length === 0 ? noCollectionInfo() : collectionInfo()}
+        </Panel>
       </Container>
     </>
   );
