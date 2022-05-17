@@ -33,10 +33,13 @@ const getItemDisplay = (value) => {
 export default function CollectionData() {
   const { project } = useContext(UserContext);
   const [salePhases, setSalePhases] = useState([]);
+  const [projectData, setProjectData] = useState({});
 
   useEffect(() => {
     try {
       const data = project["contract"];
+      setProjectData(data);
+
       const currentSalePhases = data["sale_phases"];
       setSalePhases(currentSalePhases === undefined ? [] : currentSalePhases);
     } catch (error) {
@@ -53,9 +56,29 @@ export default function CollectionData() {
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
         <TableCell align="center">{item?.name}</TableCell>
-        <TableCell align="center">{item?.amount}</TableCell>
-        <TableCell align="center">{item?.amount}</TableCell>
-        <TableCell align="center">{item?.amount}</TableCell>
+        <TableCell align="center">
+          <Link
+            sx={{ marginLeft: 1, fontSize: 14 }}
+            href={`https://ipfs.io/ipfs/${item.image_CID}`}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Link
+          </Link>
+        </TableCell>
+        <TableCell align="center">
+          <Link
+            sx={{ marginLeft: 1, fontSize: 14 }}
+            href={`https://ipfs.io/ipfs/${item.metadata_CID}`}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Link
+          </Link>
+        </TableCell>
+        <TableCell align="center">
+          {item?.amount + item?.legendary_amount}
+        </TableCell>
       </TableRow>
     );
   };
@@ -109,9 +132,22 @@ export default function CollectionData() {
             Image CID:
           </Typography>
 
-          <Link sx={{ marginLeft: 1, fontSize: 14 }} href="#">
-            Link
-          </Link>
+          {projectData.mystery_box_cid !== "" ? (
+            <Link
+              sx={{ marginTop: 0.5, marginLeft: 1.5, fontSize: 14 }}
+              href={`https://ipfs.io/ipfs/${projectData.mystery_box_cid}`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Link
+            </Link>
+          ) : (
+            <Typography
+              sx={{ marginLeft: 1.5, fontSize: 14, color: "#ff0f67" }}
+            >
+              Not Available
+            </Typography>
+          )}
         </Box>
 
         <Gap height="8px" />
@@ -121,9 +157,22 @@ export default function CollectionData() {
             Metadata CID:
           </Typography>
 
-          <Link sx={{ marginLeft: 1, fontSize: 14 }} href="#">
-            Link
-          </Link>
+          {projectData.mystery_box_metadata_cid !== "" ? (
+            <Link
+              sx={{ marginTop: 0.5, marginLeft: 1.5, fontSize: 14 }}
+              href={`https://ipfs.io/ipfs/${projectData.mystery_box_metadata_cid}`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Link
+            </Link>
+          ) : (
+            <Typography
+              sx={{ marginLeft: 1.5, fontSize: 14, color: "#ff0f67" }}
+            >
+              Not Available
+            </Typography>
+          )}
         </Box>
       </>
     );

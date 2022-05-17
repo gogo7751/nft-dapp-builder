@@ -118,12 +118,6 @@ export default function SalePhaseDialog({
         holdTokenContract === undefined ? null : holdTokenContract,
       completed:
         salePhase?.completed === undefined ? false : salePhase?.completed,
-      whitelist_url:
-        salePhase?.whitelist_url === undefined ? "" : salePhase?.whitelist_url,
-      whitelist_numbers:
-        salePhase?.whitelist_numbers === undefined
-          ? 0
-          : salePhase?.whitelist_numbers,
     });
     setOpenDialog(false);
   };
