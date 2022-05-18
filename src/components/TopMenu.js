@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   AppBar,
@@ -12,26 +12,26 @@ import {
   ListItemIcon,
   ListItemText,
   Fade,
-} from '@mui/material';
-import { UserContext } from '../UserContext';
+} from "@mui/material";
+import { UserContext } from "../UserContext";
 
-import ProjectDataService from '../services/ProjectDataService';
-import UserDataService from '../services/UserDataService';
+import ProjectDataService from "../services/ProjectDataService";
+import UserDataService from "../services/UserDataService";
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import AddIcon from '@mui/icons-material/Add';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import AddIcon from "@mui/icons-material/Add";
 
-import ProjectDialog from './ProjectDialog';
-import UserMenu from './UserMenu';
+import ProjectDialog from "./ProjectDialog";
+import UserMenu from "./UserMenu";
 
 const drawerWidth = 220;
 
 const sxAppBar = {
   width: `calc(100% - ${drawerWidth}px)`,
   //backgroundColor: 'grey.50',
-  backgroundColor: '#fff',
-  color: 'text.secondary',
+  backgroundColor: "#fff",
+  color: "text.secondary",
   marginLeft: drawerWidth,
 };
 
@@ -47,9 +47,9 @@ const TopMenu = () => {
   const btnAccount = () => {
     const address = user?.address;
     const formatAddress =
-      '0' +
+      "0" +
       address?.substr(1, 5) +
-      '...' +
+      "..." +
       address?.substr(address?.length - 4, 4);
     return (
       <Button
@@ -58,10 +58,10 @@ const TopMenu = () => {
         startIcon={
           <Avatar
             alt=""
-            sx={{ width: 20, height: 20, bgcolor: 'primary.main' }}
+            sx={{ width: 20, height: 20, bgcolor: "primary.main" }}
           />
         }
-        sx={{ textTransform: 'none', color: 'primary.main', fontWeight: 800 }}
+        sx={{ textTransform: "none", color: "primary.main", fontWeight: 800 }}
         onClick={(e) => {
           setUserMenu(e.currentTarget);
         }}
@@ -78,7 +78,7 @@ const TopMenu = () => {
         color="inherit"
         size="large"
         endIcon={<KeyboardArrowDownIcon />}
-        sx={{ textTransform: 'none' }}
+        sx={{ textTransform: "none" }}
         onClick={(e) => {
           setAnchorProjects(e.currentTarget);
         }}
@@ -102,7 +102,7 @@ const TopMenu = () => {
         {projects.map((project, index) => (
           <MenuItem
             key={index}
-            sx={{ color: 'text.secondary' }}
+            sx={{ color: "text.secondary" }}
             onClick={() => handleSelectProject(project.project_id)}
           >
             <ListItemText>{project.name}</ListItemText>
@@ -110,7 +110,7 @@ const TopMenu = () => {
         ))}
         <Divider />
         <MenuItem
-          sx={{ color: 'text.secondary' }}
+          sx={{ color: "text.secondary" }}
           onClick={handleCreateNewProject}
         >
           <ListItemIcon>
@@ -143,7 +143,7 @@ const TopMenu = () => {
   };
 
   const handleClickPreview = async () => {
-    navigate('/preview');
+    navigate("/preview");
   };
 
   return (
@@ -154,7 +154,7 @@ const TopMenu = () => {
       //className={classes.appBar}
       sx={sxAppBar}
     >
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
         {user ? btnProjectList() : <div></div>}
 
         {/* Projects menu */}

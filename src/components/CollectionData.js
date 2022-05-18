@@ -41,7 +41,7 @@ export default function CollectionData() {
       setProjectData(data);
 
       const currentSalePhases = data["sale_phases"];
-      setSalePhases(currentSalePhases === undefined ? [] : currentSalePhases);
+      setSalePhases(currentSalePhases ? [] : currentSalePhases);
     } catch (error) {
       setSalePhases([]);
     }
@@ -59,7 +59,7 @@ export default function CollectionData() {
         <TableCell align="center">
           <Link
             sx={{ marginLeft: 1, fontSize: 14 }}
-            href={`https://ipfs.io/ipfs/${item.image_CID}`}
+            href={`https://${item.image_CID}.ipfs.nftstorage.link`}
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -69,16 +69,14 @@ export default function CollectionData() {
         <TableCell align="center">
           <Link
             sx={{ marginLeft: 1, fontSize: 14 }}
-            href={`https://ipfs.io/ipfs/${item.metadata_CID}`}
+            href={`https://${item.metadata_CID}.ipfs.nftstorage.link`}
             rel="noopener noreferrer"
             target="_blank"
           >
             Link
           </Link>
         </TableCell>
-        <TableCell align="center">
-          {item?.amount + item?.legendary_amount}
-        </TableCell>
+        <TableCell align="center">{item.total_amount}</TableCell>
       </TableRow>
     );
   };
@@ -135,7 +133,7 @@ export default function CollectionData() {
           {projectData.mystery_box_cid !== "" ? (
             <Link
               sx={{ marginTop: 0.5, marginLeft: 1.5, fontSize: 14 }}
-              href={`https://ipfs.io/ipfs/${projectData.mystery_box_cid}`}
+              href={`https://${projectData.mystery_box_cid}.ipfs.nftstorage.link`}
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -160,7 +158,7 @@ export default function CollectionData() {
           {projectData.mystery_box_metadata_cid !== "" ? (
             <Link
               sx={{ marginTop: 0.5, marginLeft: 1.5, fontSize: 14 }}
-              href={`https://ipfs.io/ipfs/${projectData.mystery_box_metadata_cid}`}
+              href={`https://${projectData.mystery_box_metadata_cid}.ipfs.nftstorage.link`}
               rel="noopener noreferrer"
               target="_blank"
             >

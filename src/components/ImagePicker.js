@@ -1,37 +1,37 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { FileUploader } from 'react-drag-drop-files';
-import { UserContext } from '../UserContext';
-import { Box } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import ProjectDataService from '../services/ProjectDataService';
-import StorageService from '../services/StorageService';
-import AlertMessage from './Alert';
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { FileUploader } from "react-drag-drop-files";
+import { UserContext } from "../UserContext";
+import { Box } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import ProjectDataService from "../services/ProjectDataService";
+import StorageService from "../services/StorageService";
+import AlertMessage from "./Alert";
 
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import EditIcon from '@mui/icons-material/Edit';
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import EditIcon from "@mui/icons-material/Edit";
 
 const useStyles = makeStyles((theme) => ({
   input: {
-    display: 'none',
+    display: "none",
   },
   img: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    borderRadius: '7px',
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "7px",
   },
   label: {
-    fontSize: '17px',
-    marginTop: '4px',
+    fontSize: "17px",
+    marginTop: "4px",
   },
   subLabel: {
-    fontSize: '12px',
-    marginTop: '4px',
-    fontWeight: 'bold',
+    fontSize: "12px",
+    marginTop: "4px",
+    fontWeight: "bold",
   },
   editLabel: {
-    fontSize: '8px',
-    marginLeft: '4px',
+    fontSize: "8px",
+    marginLeft: "4px",
   },
 }));
 
@@ -46,7 +46,7 @@ export default function ImagePicker({
   fromImage,
   selectFileEvent,
 }) {
-  const fileTypes = ['JPEG', 'JPG', 'PNG', 'GIF'];
+  const fileTypes = ["JPEG", "JPG", "PNG", "GIF"];
 
   const classes = useStyles();
   const { project, setProject, setLoading } = useContext(UserContext);
@@ -54,7 +54,7 @@ export default function ImagePicker({
   const [imageFile, setImageFile] = useState(null);
   const [image, setImage] = useState(null);
   const [dragging, setDragging] = useState(false);
-  const [alert, setAlert] = useState('');
+  const [alert, setAlert] = useState("");
 
   const sxGutterTop = gutterTop ? { marginTop: 4 } : {};
   const sxGutterBottom = gutterBottom ? { marginBottom: 4 } : {};
@@ -77,27 +77,27 @@ export default function ImagePicker({
 
   const sxContainer = {
     border: 1,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     height: { height },
-    borderRadius: '8px',
-    cursor: 'pointer',
-    borderColor: 'grey.400',
+    borderRadius: "8px",
+    cursor: "pointer",
+    borderColor: "grey.400",
   };
 
   const sxEdit = {
-    position: 'relative',
-    top: '-96%',
-    left: '5%',
-    opacity: '0.85',
+    position: "relative",
+    top: "-96%",
+    left: "5%",
+    opacity: "0.85",
     border: 1,
-    display: 'inline-flex',
+    display: "inline-flex",
     padding: 0.4,
-    borderRadius: '4px',
-    borderColor: 'grey.400',
-    bgcolor: 'info.main',
+    borderRadius: "4px",
+    borderColor: "grey.400",
+    bgcolor: "info.main",
   };
 
   const emptyImage = () => {
@@ -106,13 +106,13 @@ export default function ImagePicker({
         display="flex"
         alignItems="center"
         flexDirection="column"
-        sx={{ opacity: '0.3' }}
+        sx={{ opacity: "0.3" }}
       >
         <AddPhotoAlternateIcon style={{ fontSize: 50 }} />
-        <div className={classes.label}> {dragging ? 'Drop Here' : label} </div>
+        <div className={classes.label}> {dragging ? "Drop Here" : label} </div>
         <div className={classes.subLabel}>
-          {' '}
-          (maximum size: {maximumSize}MB){' '}
+          {" "}
+          (maximum size: {maximumSize}MB){" "}
         </div>
       </Box>
     );
@@ -120,7 +120,7 @@ export default function ImagePicker({
 
   const previewImage = () => {
     return (
-      <Box sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ height: "100%", width: "100%" }}>
         <img
           alt=""
           className={classes.img}
@@ -143,7 +143,7 @@ export default function ImagePicker({
       setLoading(true);
 
       // upload to storage
-      const imageName = field + '-' + subField + '-' + project.project_id;
+      const imageName = field + "-" + subField + "-" + project.project_id;
       StorageService.uploadProcess(file, imageName, (imageURL) => {
         setImage(imageURL);
 
@@ -180,11 +180,11 @@ export default function ImagePicker({
   };
 
   const handleTypeError = (err) => {
-    setAlert('Please select image file (JPG, PNG, GIF)');
+    setAlert("Please select image file (JPG, PNG, GIF)");
   };
 
   const handleSizeError = (file) => {
-    setAlert('Maximum image file size: ' + maximumSize + ' MB');
+    setAlert("Maximum image file size: " + maximumSize + " MB");
   };
 
   return (
@@ -202,7 +202,7 @@ export default function ImagePicker({
         maxSize={maximumSize}
         types={fileTypes}
       >
-        <Box sx={sxContainer} bgcolor={dragging ? 'primary.main' : 'info.main'}>
+        <Box sx={sxContainer} bgcolor={dragging ? "primary.main" : "info.main"}>
           {imageFile || image ? previewImage() : emptyImage()}
         </Box>
       </FileUploader>

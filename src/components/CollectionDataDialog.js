@@ -43,9 +43,10 @@ export default function CollectionDataDialog({
         return {
           type: salePhase?.type,
           amount: salePhase?.amount,
-          legendary_amount: salePhase?.legendary_amount,
-          image_CID: salePhase?.image_CID,
-          metadata_CID: salePhase?.metadata_CID,
+          legendaryAmount: salePhase?.legendary_amount,
+          totalAmount: salePhase?.total_amount,
+          imageCID: salePhase?.image_CID,
+          metadataCID: salePhase?.metadata_CID,
         };
       });
 
@@ -101,6 +102,7 @@ export default function CollectionDataDialog({
         type: collectionDataJSON.salePhases[i].type,
         amount: collectionDataJSON.salePhases[i].amount,
         legendary_amount: collectionDataJSON.salePhases[i].legendaryAmount,
+        total_amount: collectionDataJSON.salePhases[i].totalAmount,
         image_CID: collectionDataJSON.salePhases[i].imageCID,
         metadata_CID: collectionDataJSON.salePhases[i].metadataCID,
       };

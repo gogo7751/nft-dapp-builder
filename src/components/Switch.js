@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { FormControlLabel, Switch } from '@mui/material';
-import { UserContext } from '../UserContext';
-import ProjectDataService from '../services/ProjectDataService';
+import React, { useState, useContext, useEffect } from "react";
+import { FormControlLabel, Switch } from "@mui/material";
+import { UserContext } from "../UserContext";
+import ProjectDataService from "../services/ProjectDataService";
 
 export default function SwitchInput({ sx, label, field, subField }) {
   const { project, setProject } = useContext(UserContext);
@@ -31,8 +31,8 @@ export default function SwitchInput({ sx, label, field, subField }) {
       setProject(newProjectData);
       ProjectDataService.updateProjectData(newProjectData);
     } catch (error) {
-      const newProjectData = { 
-        ...project, 
+      const newProjectData = {
+        ...project,
         [field]: { [subField]: checked },
         updatedDate: Math.round(new Date().getTime() / 1000),
       };
@@ -42,7 +42,7 @@ export default function SwitchInput({ sx, label, field, subField }) {
 
   return (
     <FormControlLabel
-      sx={ sx ? sx : { marginTop: -5, paddingRight: 2 }}
+      sx={sx ? sx : { marginTop: -5, paddingRight: 2 }}
       value="start"
       control={
         <Switch color="primary" checked={value} onChange={handleChange} />

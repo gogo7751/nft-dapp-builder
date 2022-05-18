@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Container, Box, Divider, Button, Typography } from '@mui/material';
-import { UserContext } from '../../UserContext';
-import { Label } from '../Label';
-import ProjectDataService from '../../services/ProjectDataService';
-import Panel from '../Panel';
-import TextInput from '../TextInput';
-import Switch from '../Switch';
-import ItemList from '../List';
-import ItemDialog from '../ItemDialog';
-import AddIcon from '@mui/icons-material/Add';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { Container, Box, Divider, Button, Typography } from "@mui/material";
+import { UserContext } from "../../UserContext";
+import { Label } from "../Label";
+import ProjectDataService from "../../services/ProjectDataService";
+import Panel from "../Panel";
+import TextInput from "../TextInput";
+import Switch from "../Switch";
+import ItemList from "../List";
+import ItemDialog from "../ItemDialog";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function RoadmapInfo() {
   const { project, setProject } = useContext(UserContext);
   const [items, setItems] = useState([]);
   const [item, setItem] = useState(null);
   const [openItemDialog, setOpenItemDialog] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState('');
-  const [actionLabel, setActionLabel] = useState('');
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [actionLabel, setActionLabel] = useState("");
   const initProjectData = useRef(false);
   const initItemData = useRef(false);
 
@@ -24,11 +24,11 @@ export default function RoadmapInfo() {
     // load items from project data at first time
     if (initProjectData.current === false) {
       initProjectData.current = true;
-      console.log('initProjectData...');
+      console.log("initProjectData...");
 
       try {
-        const data = project['roadmap_section'];
-        const currentItems = data['items'];
+        const data = project["roadmap_section"];
+        const currentItems = data["items"];
         setItems(currentItems === undefined ? [] : currentItems);
         //console.log("currentItems", currentItems)
       } catch (error) {
@@ -38,11 +38,11 @@ export default function RoadmapInfo() {
       // ignore items update at first time (prevent project data sync)
       if (initItemData.current === false) {
         initItemData.current = true;
-        console.log('initItemData...');
+        console.log("initItemData...");
       } else {
         // sync project data
-        console.log('save roadmap items', items);
-        const data = project['roadmap_section'];
+        console.log("save roadmap items", items);
+        const data = project["roadmap_section"];
         const newProjectData = {
           ...project,
           roadmap_section: { ...data, items: items },
@@ -75,8 +75,8 @@ export default function RoadmapInfo() {
 
   const handleItemEdit = (item) => {
     setItem(item);
-    setActionLabel('Update');
-    setDialogTitle('Edit item');
+    setActionLabel("Update");
+    setDialogTitle("Edit item");
     setOpenItemDialog(true);
   };
 
@@ -86,8 +86,8 @@ export default function RoadmapInfo() {
 
   const handleBtnAdd = () => {
     setItem({});
-    setActionLabel('Add');
-    setDialogTitle('Add new item');
+    setActionLabel("Add");
+    setDialogTitle("Add new item");
     setOpenItemDialog(true);
   };
 

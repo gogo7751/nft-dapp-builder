@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Container, Box, Divider, Typography, Button } from '@mui/material';
-import { UserContext } from '../../UserContext';
-import { Label } from '../Label';
-import ProjectDataService from '../../services/ProjectDataService';
-import Panel from '../Panel';
-import TextInput from '../TextInput';
-import Switch from '../Switch';
-import AddIcon from '@mui/icons-material/Add';
-import ItemList from '../List';
-import TeamMemberDialog from '../TeamMemberDialog';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { Container, Box, Divider, Typography, Button } from "@mui/material";
+import { UserContext } from "../../UserContext";
+import { Label } from "../Label";
+import ProjectDataService from "../../services/ProjectDataService";
+import Panel from "../Panel";
+import TextInput from "../TextInput";
+import Switch from "../Switch";
+import AddIcon from "@mui/icons-material/Add";
+import ItemList from "../List";
+import TeamMemberDialog from "../TeamMemberDialog";
 
 export default function TeamInfo() {
   const { project, setProject, setLoading } = useContext(UserContext);
   const [items, setItems] = useState([]);
   const [item, setItem] = useState(null);
   const [openItemDialog, setOpenItemDialog] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState('');
-  const [actionLabel, setActionLabel] = useState('');
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [actionLabel, setActionLabel] = useState("");
   const initProjectData = useRef(false);
   const initItemData = useRef(false);
 
@@ -27,8 +27,8 @@ export default function TeamInfo() {
       //console.log("Team initProjectData...")
 
       try {
-        const data = project['team_section'];
-        const currentItems = data['items'];
+        const data = project["team_section"];
+        const currentItems = data["items"];
         setItems(currentItems === undefined ? [] : currentItems);
         //console.log("currentItems", currentItems)
       } catch (error) {
@@ -41,7 +41,7 @@ export default function TeamInfo() {
         //console.log("Team initItemData...")
       } else {
         // sync project data
-        const data = project['team_section'];
+        const data = project["team_section"];
         const newProjectData = {
           ...project,
           team_section: { ...data, items: items },
@@ -75,8 +75,8 @@ export default function TeamInfo() {
 
   const handleItemEdit = (item) => {
     setItem(item);
-    setActionLabel('Update');
-    setDialogTitle('Edit Member');
+    setActionLabel("Update");
+    setDialogTitle("Edit Member");
     setOpenItemDialog(true);
   };
 
@@ -86,8 +86,8 @@ export default function TeamInfo() {
 
   const handleBtnAdd = () => {
     setItem({});
-    setActionLabel('Add');
-    setDialogTitle('Add new member');
+    setActionLabel("Add");
+    setDialogTitle("Add new member");
     setOpenItemDialog(true);
   };
 

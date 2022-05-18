@@ -1,36 +1,57 @@
 //import React, { useState, useEffect, useContext } from 'react'
-import React from 'react'
-import { IconButton, Box } from '@mui/material'
-import { Label } from '../Label'
-import Panel from '../Panel'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import LaunchIcon from '@mui/icons-material/Launch';
+import React, { useState } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { IconButton, Box, Tooltip } from "@mui/material";
+import { Label } from "../Label";
+import Panel from "../Panel";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import LaunchIcon from "@mui/icons-material/Launch";
 
-export default function ContractPanel() {
-    const sxLabel = {
-        fontSize: '14px',
-        fontWeight: 'bold',
-        color: '#999999',
-    }
-  
-    return (
-        <>
-            <Panel top={2} height={8}>
-                <Label>Smart Contract</Label>
-                
-                <Box display="flex" >
-                    <Label sx={sxLabel}>0xebe9...57E8</Label>
+export default function ContractPanel({ address }) {
+  const [copiedText, setCopiedText] = useState();
+  const sxLabel = {
+    fontSize: "14px",
+    fontWeight: "bold",
+    color: "#999999",
+  };
 
-                    <IconButton sx={{marginLeft: 0.5, marginTop:-1.5}}>
-                        <ContentCopyIcon fontSize="small" />
-                    </IconButton>
+  const formatAddress =
+    "0" +
+    address?.substr(1, 5) +
+    "..." +
+    address?.substr(address?.length - 4, 4);
 
-                    <IconButton sx={{marginLeft: -0.5, marginTop:-1}}>
-                        <LaunchIcon fontSize="small" />
-                    </IconButton>
-                </Box>
+  return (
+    <>
+      <Panel top={2} height={8}>
+        <Label>Smart Contract</Label>
 
-            </Panel>
-        </>
-    )
+        <Box display="flex">
+          <Label sx={sxLabel}>{formatAddress}</Label>
+
+          <IconButton sx={{ marginLeft: 0.5, marginTop: -1.5 }}>
+            <CopyToClipboard
+              text={address}
+              onCopy={() => setCopiedText(address)}
+            >
+              <Tooltip
+                title={
+                  copiedText === address
+                    ? "Address Copied!"
+                    : "Copy To Clipboard"
+                }
+                placement="top"
+              >
+                <ContentCopyIcon fontSize="small" />
+              </Tooltip>
+            </CopyToClipboard>
+          </IconButton>
+
+          <IconButton sx={{ marginLeft: -0.5, marginTop: -1 }}>
+            <LaunchIcon fontSize="small" />
+          </IconButton>
+        </Box>
+      </Panel>
+    </>
+  );
 }

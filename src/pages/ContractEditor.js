@@ -81,12 +81,12 @@ export default function ContractEditor() {
     try {
       const data = project["contract"];
       setContractAddress(
-        data?.contract_address === undefined ? null : data?.contract_address
+        data?.contract_address ? null : data?.contract_address
       );
       //console.log("setContractAddress", data?.contract_address)
 
       const currentSalePhases = data["sale_phases"];
-      setSalePhases(currentSalePhases === undefined ? [] : currentSalePhases);
+      setSalePhases(currentSalePhases ? [] : currentSalePhases);
       //console.log("currentSalePhases", currentSalePhases)
     } catch (error) {
       setSalePhases([]);
@@ -102,9 +102,7 @@ export default function ContractEditor() {
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
         <TableCell align="center">{item?.name}</TableCell>
-        <TableCell align="center">
-          {item?.amount + item?.legendary_amount}
-        </TableCell>
+        <TableCell align="center">{item?.total_amount}</TableCell>
         <TableCell align="center">
           {getSalesTimeString(item?.begin_date, item?.end_date)}
         </TableCell>
@@ -180,21 +178,21 @@ export default function ContractEditor() {
 
   const getContractType = (isWhitelist, isMysteryBox, isHoldToken) => {
     if (isWhitelist && isMysteryBox && isHoldToken) {
-      return 1;
+      return 0;
     } else if (isWhitelist && isMysteryBox) {
-      return 2;
+      return 1;
     } else if (isWhitelist && isHoldToken) {
-      return 3;
+      return 2;
     } else if (isMysteryBox && isHoldToken) {
-      return 4;
+      return 3;
     } else if (isWhitelist) {
-      return 5;
+      return 4;
     } else if (isMysteryBox) {
-      return 6;
+      return 5;
     } else if (isHoldToken) {
-      return 7;
+      return 6;
     } else {
-      return 8;
+      return 7;
     }
   };
 
@@ -281,9 +279,7 @@ export default function ContractEditor() {
 
     for (let i = 0; i < salePhases.length; i++) {
       price.push(salePhases[i]["mint_price"]);
-      supplyAmount.push(
-        salePhases[i]["amount"] + salePhases[i]["legendary_amount"]
-      );
+      supplyAmount.push(salePhases[i]["total_amount"]);
       mysteryBoxes.push(salePhases[i]["mystery_box"]);
       baseURIs.push(`ipfs://${salePhases[i]["metadata_CID"]}`);
 

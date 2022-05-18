@@ -1,43 +1,40 @@
-import React from 'react'
-import { Container } from '@mui/material'
-import { Label } from '../Label'
-import Panel from '../Panel'
-import TextInput from '../TextInput'
-import ImagePicker from '../ImagePicker'
+import React from "react";
+import { Container } from "@mui/material";
+import { Label } from "../Label";
+import Panel from "../Panel";
+import TextInput from "../TextInput";
+import ImagePicker from "../ImagePicker";
 
 export default function MintInfo() {
-    return (
-        <Container maxWidth="md">
-            
-            <Panel>
-                <Label gutterBottom>
-                    Mint Section
-                </Label>
+  return (
+    <Container maxWidth="md">
+      <Panel>
+        <Label gutterBottom>Mint Section</Label>
 
-                <TextInput 
-                    label="Mint section title" 
-                    placeholder="Enter title"
-                    field="mint_section"
-                    subField = "title"
-                    gutterBottom
-                />                
+        <TextInput
+          label="Mint section title"
+          placeholder="Enter title"
+          field="mint_section"
+          subField="title"
+          gutterBottom
+        />
 
-                <TextInput 
-                    label="Mint section sub-title" 
-                    placeholder="Enter sub-title"
-                    field="mint_section"
-                    subField = "subtitle"
-                />
+        <TextInput
+          label="Mint section sub-title"
+          placeholder="Enter sub-title"
+          field="mint_section"
+          subField="subtitle"
+        />
 
-                <ImagePicker
-                    label="Background Image"
-                    field="mint_section"
-                    subField = "image"
-                    height = "230px"
-                    maximumSize={1}
-                    gutterTop
-                />
-            </Panel>
-        </Container>
-  )
+        <ImagePicker
+          label="Background Image"
+          field="mint_section"
+          subField="image"
+          height="230px"
+          maximumSize={1}
+          gutterTop
+        />
+      </Panel>
+    </Container>
+  );
 }

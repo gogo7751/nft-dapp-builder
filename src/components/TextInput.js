@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { UserContext } from '../UserContext';
-import { TextField } from '@mui/material';
-import ProjectDataService from '../services/ProjectDataService';
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { UserContext } from "../UserContext";
+import { TextField } from "@mui/material";
+import ProjectDataService from "../services/ProjectDataService";
 
 export default function TextInput({
   label,
@@ -18,8 +18,8 @@ export default function TextInput({
   const timerRef = useRef(null);
   const projectData = useRef(null);
   const sx = {};
-  if (gutterTop) sx['marginTop'] = 4;
-  if (gutterBottom) sx['marginBottom'] = 4;
+  if (gutterTop) sx["marginTop"] = 4;
+  if (gutterBottom) sx["marginBottom"] = 4;
 
   useEffect(() => {
     try {
@@ -45,8 +45,8 @@ export default function TextInput({
       setProject(newProjectData);
       projectData.current = newProjectData;
     } catch (error) {
-      const newProjectData = { 
-        ...project, 
+      const newProjectData = {
+        ...project,
         [field]: { [subField]: text },
         updatedDate: Math.round(new Date().getTime() / 1000),
       };
@@ -57,7 +57,7 @@ export default function TextInput({
     // auto save
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
-      console.log('auto save...');
+      console.log("auto save...");
       ProjectDataService.updateProjectData(projectData.current);
     }, 1000);
   };
@@ -72,7 +72,7 @@ export default function TextInput({
         placeholder={placeholder}
         color="secondary"
         autoComplete="off"
-        value={value ? value : ''}
+        value={value ? value : ""}
         onChange={handleTextChange}
         InputLabelProps={{ shrink: true }}
         disabled={disabled}
@@ -90,7 +90,7 @@ export default function TextInput({
         placeholder={placeholder}
         color="secondary"
         autoComplete="off"
-        value={value ? value : ''}
+        value={value ? value : ""}
         onChange={handleTextChange}
         InputLabelProps={{ shrink: true }}
         rows={4}

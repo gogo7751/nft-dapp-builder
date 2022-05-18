@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../UserContext';
+import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "../UserContext";
 import {
   InputLabel,
   MenuItem,
@@ -7,15 +7,15 @@ import {
   Select,
   ListSubheader,
   Divider,
-} from '@mui/material';
-import { networks } from '../networks';
-import ProjectDataService from '../services/ProjectDataService';
+} from "@mui/material";
+import { networks } from "../networks";
+import ProjectDataService from "../services/ProjectDataService";
 
 function Selector({ label, items, gutterTop, gutterBottom, currentValue }) {
   const [value, setValue] = useState(currentValue);
   const sx = {};
-  if (gutterTop) sx['marginTop'] = 4;
-  if (gutterBottom) sx['marginBottom'] = 4;
+  if (gutterTop) sx["marginTop"] = 4;
+  if (gutterBottom) sx["marginBottom"] = 4;
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -52,8 +52,8 @@ function NetworkSelector({
 }) {
   const { project, setProject } = useContext(UserContext);
   const sx = {};
-  if (gutterTop) sx['marginTop'] = 4;
-  if (gutterBottom) sx['marginBottom'] = 4;
+  if (gutterTop) sx["marginTop"] = 4;
+  if (gutterBottom) sx["marginBottom"] = 4;
 
   useEffect(() => {
     if (field !== null && subField !== null) {
@@ -86,7 +86,7 @@ function NetworkSelector({
     <FormControl fullWidth sx={sx} color="secondary">
       <InputLabel>Network</InputLabel>
       <Select
-        value={value === null ? '' : value}
+        value={value === null ? "" : value}
         label="Network"
         disabled={disabled}
         onChange={handleChange}

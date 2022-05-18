@@ -4,6 +4,7 @@ import contractJSON from "../abis/NFTPod.json";
 
 const beneficiaryAddress = "0xE7f72791D25ec97a94ccD0D32Aa5Ef1D9E7d83dE";
 const contracts = {
+  0: contractJSON,
   1: contractJSON,
   2: contractJSON,
   3: contractJSON,
@@ -11,7 +12,6 @@ const contracts = {
   5: contractJSON,
   6: contractJSON,
   7: contractJSON,
-  8: contractJSON,
 };
 
 export default class ContractService {
@@ -96,7 +96,8 @@ export default class ContractService {
         contracts[this.contractType].abi,
         signer
       );
-      await contract.balanceOfContract();
+      const balance = await contract.balanceOfContract();
+      return ethers.utils.formatEther(balance);
     } catch (err) {
       errorHandler(err);
     }
@@ -207,7 +208,12 @@ export default class ContractService {
     }
   };
 
-  mintToken = async (mintQuantity, proofs, price, errorHandler) => {
+  mintToken = async (
+    mintQuantity,
+    proofs = "dummyProof",
+    price,
+    errorHandler
+  ) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();

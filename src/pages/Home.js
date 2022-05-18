@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   AppBar,
@@ -7,29 +7,29 @@ import {
   Box,
   Container,
   Typography,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { grey } from '@mui/material/colors';
-import { UserContext } from '../UserContext';
-import UserDataService from '../services/UserDataService';
-import AccountService from '../services/AccountService';
-import AlertMessage from '../components/Alert';
-import UserMenu from '../components/UserMenu';
-import Panel from '../components/Panel';
-import ProjectDialog from '../components/ProjectDialog';
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { grey } from "@mui/material/colors";
+import { UserContext } from "../UserContext";
+import UserDataService from "../services/UserDataService";
+import AccountService from "../services/AccountService";
+import AlertMessage from "../components/Alert";
+import UserMenu from "../components/UserMenu";
+import Panel from "../components/Panel";
+import ProjectDialog from "../components/ProjectDialog";
 
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AddIcon from '@mui/icons-material/Add';
-import BackgroundImage from '../images/background.jpg';
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AddIcon from "@mui/icons-material/Add";
+import BackgroundImage from "../images/background.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
+    height: "100vh",
     backgroundImage: `url(${BackgroundImage})`,
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
   },
   toolbar: theme.mixins.toolbar,
 }));
@@ -39,14 +39,14 @@ export default function Home() {
   const navigate = useNavigate();
 
   const { user, setLoading } = useContext(UserContext);
-  const [alert, setAlert] = useState('');
+  const [alert, setAlert] = useState("");
   const [userMenu, setUserMenu] = useState(null);
   const [openProjectDialog, setOpenProjectDialog] = useState(false);
 
-  useEffect( async () => {
+  useEffect(async () => {
     if (user?.projects) {
-      navigate('/dashboard');
-    } 
+      navigate("/dashboard");
+    }
   }, [user]);
 
   const handleSignin = async () => {
@@ -85,7 +85,7 @@ export default function Home() {
       // get user data
       const userData = await UserDataService.getUserData();
       if (userData.projects) {
-        navigate('/dashboard');
+        navigate("/dashboard");
       }
     }
     setLoading(false);
@@ -108,16 +108,16 @@ export default function Home() {
   const btnAccount = () => {
     const address = user.address;
     const formatAddress =
-      '0' +
+      "0" +
       address?.substr(1, 5) +
-      '...' +
+      "..." +
       address?.substr(address?.length - 4, 4);
     return (
       <Button
         color="inherit"
         size="large"
         startIcon={<AccountCircleIcon />}
-        sx={{ textTransform: 'none', fontWeight: 800 }}
+        sx={{ textTransform: "none", fontWeight: 800 }}
         onClick={(e) => {
           setUserMenu(e.currentTarget);
         }}
@@ -200,18 +200,18 @@ export default function Home() {
   };
 
   const sxBottomPanel = {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     height: 40,
     bottom: 0,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
   };
 
   return (
     <div className={classes.root}>
       {/* Navigation */}
       <AppBar position="fixed" elevation={0}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
           <Typography variant="h3">{/* Logo */}</Typography>
 
           <Box>{user ? btnAccount() : btnConnect()}</Box>

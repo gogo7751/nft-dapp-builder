@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -7,14 +7,14 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-} from '@mui/material';
-import ProjectDataService from '../services/ProjectDataService';
-import AlertMessage from './Alert';
+} from "@mui/material";
+import ProjectDataService from "../services/ProjectDataService";
+import AlertMessage from "./Alert";
 
-import { useContext } from 'react';
-import { UserContext } from '../UserContext';
-import { NetworkSelector } from '../components/Selector';
-import UserDataService from '../services/UserDataService';
+import { useContext } from "react";
+import { UserContext } from "../UserContext";
+import { NetworkSelector } from "../components/Selector";
+import UserDataService from "../services/UserDataService";
 
 export default function ProjectDialog({ openState }) {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export default function ProjectDialog({ openState }) {
 
   const [projectName, setProjectName] = useState(null);
   const [networkId, setNetworkId] = useState(null);
-  const [alert, setAlert] = useState('');
+  const [alert, setAlert] = useState("");
   const { openProjectDialog, setOpenProjectDialog } = openState;
 
   const handleClose = () => {
@@ -32,10 +32,10 @@ export default function ProjectDialog({ openState }) {
   };
 
   const handleCreate = async () => {
-    if (projectName === null || projectName === '') {
-      setAlert('Please enter project name');
+    if (projectName === null || projectName === "") {
+      setAlert("Please enter project name");
     } else if (networkId === null) {
-      setAlert('Please select network');
+      setAlert("Please select network");
     } else {
       setOpenProjectDialog(false);
 
@@ -56,7 +56,7 @@ export default function ProjectDialog({ openState }) {
       setProjectName(null);
       setNetworkId(null);
 
-      navigate('/website');
+      navigate("/website");
     }
   };
 
@@ -64,7 +64,7 @@ export default function ProjectDialog({ openState }) {
     <Dialog
       open={openProjectDialog}
       onClose={handleClose}
-      maxWidth={'xs'}
+      maxWidth={"xs"}
       fullWidth={true}
     >
       <DialogTitle>Create new project</DialogTitle>

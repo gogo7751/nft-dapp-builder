@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from "react";
 import {
   Button,
   Dialog,
@@ -8,32 +8,32 @@ import {
   TextField,
   InputAdornment,
   Typography,
-} from '@mui/material'
-import ProjectDataService from '../services/ProjectDataService'
-import AlertMessage from './Alert'
+} from "@mui/material";
+import ProjectDataService from "../services/ProjectDataService";
+import AlertMessage from "./Alert";
 
-import { useContext } from 'react'
-import { UserContext } from '../UserContext'
-import WebsiteDataService from '../services/WebsiteDataService'
-import { layoutPaths } from './Layout'
+import { useContext } from "react";
+import { UserContext } from "../UserContext";
+import WebsiteDataService from "../services/WebsiteDataService";
+import { layoutPaths } from "./Layout";
 
 const checkLinkName = (name) => {
-  return /^[a-z0-9]*$/.test(name)
-}
+  return /^[a-z0-9]*$/.test(name);
+};
 
-export default function WebsiteLinkDialog({ openState }) {  
-  const { project, setProject, setLoading } = useContext(UserContext)
-  const [link, setLink] = useState(null)
-  const [alert, setAlert] = useState('')
-  const { openLinkDialog, setOpenLinkDialog } = openState
-  const orgLink = useRef(null)
+export default function WebsiteLinkDialog({ openState }) {
+  const { project, setProject, setLoading } = useContext(UserContext);
+  const [link, setLink] = useState(null);
+  const [alert, setAlert] = useState("");
+  const { openLinkDialog, setOpenLinkDialog } = openState;
+  const orgLink = useRef(null);
 
   useEffect(() => {
-    if(openLinkDialog) {
+    if (openLinkDialog) {
       try {
-        const data = project['website']
-        orgLink.current = data['link']
-        setLink(orgLink.current)
+        const data = project["website"];
+        orgLink.current = data["link"];
+        setLink(orgLink.current);
       } catch (error) {
         setLink(false);
       }
@@ -41,49 +41,48 @@ export default function WebsiteLinkDialog({ openState }) {
   }, [openLinkDialog]);
 
   const handleClose = () => {
-    setOpenLinkDialog(false)
-    setLink(null)
+    setOpenLinkDialog(false);
+    setLink(null);
   };
 
   const handleCreate = async () => {
-    if (link === null || link === '' || link === undefined) {
-      setAlert('Please enter website link')
-    }
-    else if(checkLinkName(link) === false) {
-      setAlert('Invalid website link (only accept lower case letter/ numbers)')
-    }
-    else if(layoutPaths.includes('/' + link)) {
-      setAlert('Invalid website link')
-    }
-    else if(await WebsiteDataService.isLinkExist(link)){
-      setAlert('Invalid website link (already exists)')
-    } else {      
-      setOpenLinkDialog(false)
+    if (link === null || link === "" || link === undefined) {
+      setAlert("Please enter website link");
+    } else if (checkLinkName(link) === false) {
+      setAlert("Invalid website link (only accept lower case letter/ numbers)");
+    } else if (layoutPaths.includes("/" + link)) {
+      setAlert("Invalid website link");
+    } else if (await WebsiteDataService.isLinkExist(link)) {
+      setAlert("Invalid website link (already exists)");
+    } else {
+      setOpenLinkDialog(false);
 
-      if(orgLink.current === link) { return }
+      if (orgLink.current === link) {
+        return;
+      }
 
-      if(orgLink.current && orgLink.current != link) {
+      if (orgLink.current && orgLink.current != link) {
         await WebsiteDataService.deleteData(orgLink.current);
       }
 
-      setLoading(true)
-            
+      setLoading(true);
+
       try {
-        const data = project['website'];
+        const data = project["website"];
         const newProjectData = {
           ...project,
-          ['website']: { ...data, ['link']: link },
+          ["website"]: { ...data, ["link"]: link },
         };
         setProject(newProjectData);
         await ProjectDataService.updateProjectData(newProjectData);
         await WebsiteDataService.setData(link, project.project_id);
       } catch (error) {
-        const newProjectData = { ...project, ['website']: { ['link']: link } };
+        const newProjectData = { ...project, ["website"]: { ["link"]: link } };
         setProject(newProjectData);
       }
-      
-      setLoading(false)      
-      setLink(null)      
+
+      setLoading(false);
+      setLink(null);
     }
   };
 
@@ -91,7 +90,7 @@ export default function WebsiteLinkDialog({ openState }) {
     <Dialog
       open={openLinkDialog}
       onClose={handleClose}
-      maxWidth={'xs'}
+      maxWidth={"xs"}
       fullWidth={true}
     >
       <DialogTitle>Website Link</DialogTitle>
@@ -103,7 +102,7 @@ export default function WebsiteLinkDialog({ openState }) {
           margin="dense"
           InputLabelProps={{ shrink: true }}
           autoComplete="off"
-          inputProps = {{ spellCheck: false }}
+          inputProps={{ spellCheck: false }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -112,7 +111,7 @@ export default function WebsiteLinkDialog({ openState }) {
             ),
           }}
           variant="outlined"
-          value={link ? link : ''}
+          value={link ? link : ""}
           onChange={(e) => {
             setLink(e.target.value);
           }}

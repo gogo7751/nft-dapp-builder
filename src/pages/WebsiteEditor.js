@@ -62,7 +62,7 @@ export default function WebsiteEditor() {
   const { user, project, setProject, setLoading } = useContext(UserContext);
   const [link, setLink] = useState(null);
   const [openLinkDialog, setOpenLinkDialog] = useState(false);
-  const [alert, setAlert] = useState('')
+  const [alert, setAlert] = useState("");
 
   useEffect(() => {
     try {
@@ -87,12 +87,14 @@ export default function WebsiteEditor() {
       );
 
       // sync project data
-      const projectData = await ProjectDataService.getProjectData(project.project_id);
+      const projectData = await ProjectDataService.getProjectData(
+        project.project_id
+      );
       setProject(projectData);
 
       setLoading(false);
 
-      setAlert('Publish website successfully')
+      setAlert("Publish website successfully");
     } else {
       setOpenLinkDialog(true);
     }
@@ -135,7 +137,11 @@ export default function WebsiteEditor() {
           </Typography>
 
           <Button
-            variant={(project?.updatedDate === project?.publishDate) ? "outlined" : "contained"}
+            variant={
+              project?.updatedDate === project?.publishDate
+                ? "outlined"
+                : "contained"
+            }
             sx={{ marginLeft: 2, marginTop: 0, marginBottom: 2 }}
             onClick={() => {
               handlePublish();
@@ -166,7 +172,7 @@ export default function WebsiteEditor() {
       <WebsiteLinkDialog openState={{ openLinkDialog, setOpenLinkDialog }} />
 
       {/* Alert */}
-      <AlertMessage alertState={{ alert, setAlert, severity: 'success' }} />      
+      <AlertMessage alertState={{ alert, setAlert, severity: "success" }} />
     </Box>
   );
 }
