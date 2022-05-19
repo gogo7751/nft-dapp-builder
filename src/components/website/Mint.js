@@ -1,12 +1,12 @@
-import { React, useState } from 'react';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import SvgIcon from '@mui/material/SvgIcon';
-import Stack from '@mui/material/Stack';
+import { React, useState } from "react";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import SvgIcon from "@mui/material/SvgIcon";
+import Stack from "@mui/material/Stack";
 
 function EthIcon(props) {
   return (
@@ -17,13 +17,18 @@ function EthIcon(props) {
 }
 
 export default function Mint(data) {
-  const [qty, setQty] = useState(1);
-  const MAX_PER_WALLET = 10;
+  const [mintQuantity, setMintQuantity] = useState(1);
+  const current_sale_phase = data.contract?.current_sale_phase
+  const current_sale_phase_data = current_sale_phase !== undefined ? data.contract.sale_phases[current_sale_phase] : undefined;
+  const max_quantity = data.contract?.max_quantity ? data.contract.max_quantity : 10;
+  const mint_price = current_sale_phase_data ? current_sale_phase_data.mint_price : 0.2;
+  const amount = current_sale_phase_data ? current_sale_phase_data.total_amount : "1000";
+  const minted = data.minted ? data.minted : 0;
 
   const styles = {
     paperContainer: {
       backgroundImage: 'url("' + data.mint.image + '")',
-      backgroundSize: 'cover',
+      backgroundSize: "cover",
     },
   };
 
@@ -44,7 +49,7 @@ export default function Mint(data) {
             color="textSecondary"
             mb={4}
             sx={{
-              textAlign: 'center',
+              textAlign: "center",
             }}
           >
             {data.mint.subtitle}
@@ -58,20 +63,20 @@ export default function Mint(data) {
           gutterBottom
           m={1}
         >
-          10 MAX PER WALLET
+          {max_quantity} MAX PER WALLET
         </Typography>
 
         <Stack direction="row" alignItems="center" justifyContent="center">
           <EthIcon color="primary" />
-          <Typography variant="body">0.2 ETH</Typography>
+          <Typography variant="body">{mint_price} ETH</Typography>
         </Stack>
 
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: "center",
+            justifyContent: "center",
           }}
           m={1}
         >
@@ -79,32 +84,36 @@ export default function Mint(data) {
             component="span"
             sx={{
               border: 1,
-              borderRadius: '30px',
-              display: 'flex',
-              width: '150px',
-              justifyContent: 'center',
+              borderRadius: "30px",
+              display: "flex",
+              width: "150px",
+              justifyContent: "center",
             }}
             m={1}
           >
             <IconButton
-              sx={{ p: '10px' }}
+              sx={{ p: "10px" }}
               aria-label="remove"
-              onClick={() => setQty((prev) => (prev > 1 ? prev - 1 : prev))}
+              onClick={() =>
+                setMintQuantity((prev) => (prev > 1 ? prev - 1 : prev))
+              }
             >
               <RemoveIcon />
             </IconButton>
             <Typography
               align="center"
-              alignSelf={'center'}
-              sx={{ width: '50%' }}
+              alignSelf={"center"}
+              sx={{ width: "50%" }}
             >
-              {qty}
+              {mintQuantity}
             </Typography>
             <IconButton
-              sx={{ p: '10px' }}
+              sx={{ p: "10px" }}
               aria-label="add"
               onClick={() =>
-                setQty((prev) => (prev < MAX_PER_WALLET ? prev + 1 : prev))
+                setMintQuantity((prev) =>
+                  prev < max_quantity ? prev + 1 : prev
+                )
               }
             >
               <AddIcon />
@@ -119,20 +128,21 @@ export default function Mint(data) {
           gutterBottom
           m={1}
         >
-          15/10,000 MINTED
+          {minted}/{amount} MINTED
         </Typography>
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Button
-            style={{ minHeight: '40px', width: '30%', maxWidth: '250px' }}
+            style={{ minHeight: "40px", width: "30%", maxWidth: "250px" }}
             variant="outlined"
             size="large"
+            onClick={() => data.handleMint(mintQuantity, mint_price)}
           >
             Mint
           </Button>
