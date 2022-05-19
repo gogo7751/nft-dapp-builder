@@ -198,26 +198,33 @@ export default function ContractEditor() {
   };
 
   const getMerkleRoots = (salePhases) => {
+    // const merkleTreeRoots = [];
+    // const whitelist = [
+    //   "0xE7f72791D25ec97a94ccD0D32Aa5Ef1D9E7d83dE",
+    //   "0xb41212A9Ae065128f59217Ad4B39E6e626AC2A57",
+    //   "0x11aE5C23827a65845746d354e75F8fc0c1235518",
+    //   "0x043D0FE28915604ecdD8B706C14BEB969B32D62a",
+    // ];
+    // for (let i = 0; i < salePhases.length; i++) {
+    //   if (salePhases[i]["whitelist"] === true) {
+    //     const leafNodes = whitelist.map((addr) => keccak256(addr));
+    //     const tree = new MerkleTree(leafNodes, keccak256, {
+    //       sortPairs: true,
+    //     });
+    //     const root = "0x" + tree.getRoot().toString("hex");
+    //     merkleTreeRoots.push(root);
+    //   } else {
+    //     merkleTreeRoots.push(
+    //       "0x0000000000000000000000000000000000000000000000000000000000000000"
+    //     );
+    //   }
+    // }
+
     const merkleTreeRoots = [];
-    const whitelist = [
-      "0xE7f72791D25ec97a94ccD0D32Aa5Ef1D9E7d83dE",
-      "0xb41212A9Ae065128f59217Ad4B39E6e626AC2A57",
-      "0x11aE5C23827a65845746d354e75F8fc0c1235518",
-      "0x043D0FE28915604ecdD8B706C14BEB969B32D62a",
-    ];
     for (let i = 0; i < salePhases.length; i++) {
-      if (salePhases[i]["whitelist"] === true) {
-        const leafNodes = whitelist.map((addr) => keccak256(addr));
-        const tree = new MerkleTree(leafNodes, keccak256, {
-          sortPairs: true,
-        });
-        const root = "0x" + tree.getRoot().toString("hex");
-        merkleTreeRoots.push(root);
-      } else {
-        merkleTreeRoots.push(
-          "0x0000000000000000000000000000000000000000000000000000000000000000"
-        );
-      }
+      merkleTreeRoots.push(
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      );
     }
     return merkleTreeRoots;
   };
@@ -270,10 +277,7 @@ export default function ContractEditor() {
     const baseURIs = [];
 
     let merkleTreeRoots = [];
-    let holdTokenAddresses = [
-      "0x9c58441d3AA1B156c60c521267c37086884b0619",
-      "0x9c58441d3AA1B156c60c521267c37086884b0619",
-    ];
+    let holdTokenAddresses = [];
     let isWhitelist = false;
     let isMysteryBox = false;
     let isHoldToken = false;
@@ -295,9 +299,13 @@ export default function ContractEditor() {
       isHoldToken
     );
 
-    if (isWhitelist) {
-      merkleTreeRoots = getMerkleRoots(salePhases);
-    }
+    // ===== TODO:
+    // REMOVE DUMMY WHITELIST, MYSTERYBOX BASE URI, HOLD TOKEN VALUES IN ELSE CONDITION WHEN 8 CONTRACT JSONs ARE CREATED =====
+
+    // if (isWhitelist) {
+    //   merkleTreeRoots = getMerkleRoots(salePhases);
+    // }
+    merkleTreeRoots = getMerkleRoots(salePhases);
 
     if (isMysteryBox) {
       const mysteryBoxMetadataCID =
@@ -310,10 +318,18 @@ export default function ContractEditor() {
       }
 
       baseURIs.push(`ipfs://${mysteryBoxMetadataCID}`);
+    } else {
+      baseURIs.push(
+        `ipfs://bafkreiefnzzhqm3udsbf54bh3epxyx7koans3lxzrj2crsdiyokl36a53a`
+      );
     }
 
     if (isHoldToken) {
       holdTokenAddresses = getTokenAddresses(salePhases);
+    } else {
+      for (let i = 0; i < salePhases.length; i++) {
+        holdTokenAddresses.push("0x0000000000000000000000000000000000000000");
+      }
     }
 
     const supplyStartIndex = getSupplyStartIndex(salePhases, supplyAmount);

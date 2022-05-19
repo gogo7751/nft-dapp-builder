@@ -173,7 +173,7 @@ export default class ContractService {
         this.contractJSON.abi,
         signer
       );
-      await contract.setSaleStartTime(timestamp, phaseIndex);
+      await contract.setPhaseSaleStartTime(timestamp, phaseIndex);
     } catch (err) {
       errorHandler(err);
     }
