@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Web3 from "web3";
+import { ethers } from "ethers";
 import MerkleTree from "merkletreejs";
 import keccak256 from "keccak256";
 import { makeStyles } from "@mui/styles";
@@ -278,10 +279,10 @@ export default function ContractEditor() {
     let isHoldToken = false;
 
     for (let i = 0; i < salePhases.length; i++) {
-      price.push(salePhases[i]["mint_price"]);
+      price.push(ethers.utils.parseEther(salePhases[i]["mint_price"]));
       supplyAmount.push(salePhases[i]["total_amount"]);
       mysteryBoxes.push(salePhases[i]["mystery_box"]);
-      baseURIs.push(`ipfs://${salePhases[i]["metadata_CID"]}`);
+      baseURIs.push(`ipfs://${salePhases[i]["metadata_CID"]}/`);
 
       isMysteryBox = isMysteryBox || salePhases[i]["mystery_box"];
       isWhitelist = isWhitelist || salePhases[i]["whitelist"];

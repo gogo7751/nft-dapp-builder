@@ -211,7 +211,9 @@ export default class ContractService {
 
   mintToken = async (
     mintQuantity,
-    proofs = "dummyProof",
+    proofs = [
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+    ],
     price,
     errorHandler
   ) => {
@@ -223,8 +225,9 @@ export default class ContractService {
         this.contractJSON.abi,
         signer
       );
+      const priceInEth = ethers.utils.parseEther(price);
       await contract.mint(mintQuantity, proofs, {
-        value: (price * Math.pow(10, 18) * mintQuantity).toString(),
+        value: (priceInEth * mintQuantity).toString(),
       });
     } catch (err) {
       errorHandler(err);
@@ -240,8 +243,9 @@ export default class ContractService {
         this.contractJSON.abi,
         signer
       );
+      const priceInEth = ethers.utils.parseEther(price);
       await contract.mint(mintQuantity, {
-        value: (price * Math.pow(10, 18) * mintQuantity).toString(),
+        value: (priceInEth * mintQuantity).toString(),
       });
     } catch (err) {
       errorHandler(err);

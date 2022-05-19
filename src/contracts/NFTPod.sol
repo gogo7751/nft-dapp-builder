@@ -61,7 +61,7 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         for (uint256 i = 0; i < _phaseSupply.length; i++) {
             phaseSupply.push(_phaseSupply[i]);
             phaseSupplyStartIndex.push(_phaseSupplyStartIndex[i]);
-            phaseMintPrice.push(_phaseMintPrice[i] * 1000000000000000000); // ether to wei
+            phaseMintPrice.push(_phaseMintPrice[i]); // ether to wei
             phaseSaleStartTime.push(_phaseSaleStartTime[i]);
             isMysteryBoxRevealed.push(!isMysteryBoxEnabled[i]);
             baseURIs.push(_baseURIs[i]);
@@ -103,10 +103,10 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
             "Ether value sent is not correct"
         );
         require(isValidMerkleProof(proof), "Invalid whitelist proof");
-        // require(
-        //     hasTokenOfAddress(msg.sender, currentPhase),
-        //     "Must Own NFT to mint"
-        // );
+        require(
+            hasTokenOfAddress(msg.sender, currentPhase),
+            "Must Own NFT to mint"
+        );
 
         for (uint256 i = 0; i < mintNumber; i++) {
             _safeMint(msg.sender, _nowTokenId + i);
@@ -229,7 +229,7 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         return address(this).balance;
     }
 
-    function setSaleStartTime(uint256 timestamp, uint256 index)
+    function setPhaseSaleStartTime(uint256 timestamp, uint256 index)
         external
         onlyOwner
     {
@@ -252,6 +252,10 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         view
         returns (bool)
     {
+        if (phaseMerkleRoot[currentPhase] == 0) {
+          return true;
+        }
+
         return
             MerkleProof.verify(
                 proof,
@@ -265,6 +269,10 @@ contract NFTPod is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         view
         returns (bool)
     {
+        if (phaseNFTAddress[index] == address(0)) {
+          return true;
+        }
+
         ERC721 contractInstance = ERC721(phaseNFTAddress[index]);
         return (contractInstance.balanceOf(user) > 0);
     }
