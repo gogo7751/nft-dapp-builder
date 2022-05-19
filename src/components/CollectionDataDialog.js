@@ -124,6 +124,7 @@ export default function CollectionDataDialog({
         sale_phases: updatedSalePhases,
         mystery_box_cid: mysteryBoxCID,
         mystery_box_metadata_cid: mysteryBoxMetadataCID,
+        current_sale_phase: 0,
       },
     };
     setProject(newProjectData);

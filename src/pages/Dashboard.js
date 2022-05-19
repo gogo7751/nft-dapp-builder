@@ -49,7 +49,7 @@ export default function Dashboard() {
     salePhase
   ) => {
     if (phaseIndex === 0) {
-      return 0;
+      return 1;
     }
     return phaseTokenStartIndex[phaseIndex - 1] + salePhase.totalAmount;
   };
@@ -167,14 +167,16 @@ export default function Dashboard() {
   };
 
   const flipContractMysteryBoxState = async (phaseIndex) => {
-    const metadataCID = project.contract.sale_phases[phaseIndex].metadata_CID;
-    const baseURI = `ipfs://${metadataCID}`;
+    if (project.contract?.sale_phases !== undefined) {
+      const metadataCID = project.contract.sale_phases[phaseIndex].metadata_CID;
+      const baseURI = `ipfs://${metadataCID}`;
 
-    await contractService.flipMysteryBoxState(
-      phaseIndex,
-      baseURI,
-      errorHandler
-    );
+      await contractService.flipMysteryBoxState(
+        phaseIndex,
+        baseURI,
+        errorHandler
+      );
+    }
   };
 
   const reserveContractToken = async (phaseIndex, numOfReserveToken) => {
