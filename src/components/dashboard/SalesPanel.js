@@ -343,7 +343,6 @@ export default function SalesPanel({
   };
 
   const handleReserveToken = async (numOfReserveToken) => {
-    console.log("Num of reserve token: ", numOfReserveToken);
     await reserveContractToken(phaseIndex, numOfReserveToken);
   };
 

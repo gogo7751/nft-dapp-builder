@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import Web3 from "web3";
 import contractJSON from "../abis/NFTPod.json";
+import ERC20JSON from "../abis/ERC721.json";
 
 const beneficiaryAddress = "0xE7f72791D25ec97a94ccD0D32Aa5Ef1D9E7d83dE";
 const contracts = {
@@ -230,6 +231,23 @@ export default class ContractService {
     }
   };
 
+  mintTokenNoProof = async (mintQuantity, price, errorHandler) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        this.address,
+        this.contractJSON.abi,
+        signer
+      );
+      await contract.mint(mintQuantity, {
+        value: (price * Math.pow(10, 18) * mintQuantity).toString(),
+      });
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
   getNowTokenId = async (errorHandler) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -260,5 +278,16 @@ export default class ContractService {
     } catch (err) {
       errorHandler(err);
     }
+  };
+
+  hasTokenOfContract = async (senderAddress, contractAddress) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(
+      contractAddress,
+      ERC20JSON.abi,
+      provider
+    );
+    const ownedToken = await contract.balanceOf(senderAddress);
+    return ownedToken.toNumber() > 0;
   };
 }
