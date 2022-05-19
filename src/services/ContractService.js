@@ -211,11 +211,11 @@ export default class ContractService {
 
   mintToken = async (
     mintQuantity,
+    price,
+    errorHandler,
     proofs = [
       "0x0000000000000000000000000000000000000000000000000000000000000000",
-    ],
-    price,
-    errorHandler
+    ]
   ) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);

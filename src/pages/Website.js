@@ -60,12 +60,12 @@ export default function Website() {
         // mint token has whitelist
         await contractService.mintToken(
           mintQuantity,
-          proofs,
           price,
           (error) => {
             setAlert(error.message);
             return;
-          }
+          },
+          proofs
         );
       } else {
         // mint token none whitelist
