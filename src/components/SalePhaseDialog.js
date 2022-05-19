@@ -106,16 +106,18 @@ export default function SalePhaseDialog({
     }
 
     handleAction({
-      name: name ? null : name,
+      name: name === undefined ? null : name,
       amount: salePhase?.amount,
-      begin_date: beginDate ? null : beginDate,
-      end_date: endDate ? null : endDate,
-      mint_price: mintPrice ? 0 : mintPrice,
-      mystery_box: mysteryBox ? false : mysteryBox,
-      whitelist: whitelist ? false : whitelist,
-      hold_token: holdToken ? false : holdToken,
-      hold_token_contract: holdTokenContract ? null : holdTokenContract,
-      completed: salePhase?.completed ? false : salePhase?.completed,
+      begin_date: beginDate === undefined ? null : beginDate,
+      end_date: endDate === undefined ? null : endDate,
+      mint_price: mintPrice === undefined ? 0 : mintPrice,
+      mystery_box: mysteryBox === undefined ? false : mysteryBox,
+      whitelist: whitelist === undefined ? false : whitelist,
+      hold_token: holdToken === undefined ? false : holdToken,
+      hold_token_contract:
+        holdTokenContract === undefined ? null : holdTokenContract,
+      completed:
+        salePhase?.completed === undefined ? false : salePhase?.completed,
     });
     setOpenDialog(false);
   };

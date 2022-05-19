@@ -81,12 +81,12 @@ export default function ContractEditor() {
     try {
       const data = project["contract"];
       setContractAddress(
-        data?.contract_address ? null : data?.contract_address
+        data?.contract_address === undefined ? null : data?.contract_address
       );
       //console.log("setContractAddress", data?.contract_address)
 
       const currentSalePhases = data["sale_phases"];
-      setSalePhases(currentSalePhases ? [] : currentSalePhases);
+      setSalePhases(currentSalePhases === undefined ? [] : currentSalePhases);
       //console.log("currentSalePhases", currentSalePhases)
     } catch (error) {
       setSalePhases([]);

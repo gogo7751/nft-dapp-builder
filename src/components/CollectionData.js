@@ -41,7 +41,7 @@ export default function CollectionData() {
       setProjectData(data);
 
       const currentSalePhases = data["sale_phases"];
-      setSalePhases(currentSalePhases ? [] : currentSalePhases);
+      setSalePhases(currentSalePhases === undefined ? [] : currentSalePhases);
     } catch (error) {
       setSalePhases([]);
     }
