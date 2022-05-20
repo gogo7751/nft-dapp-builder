@@ -6,8 +6,9 @@ import { Label } from "../Label";
 import Panel from "../Panel";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LaunchIcon from "@mui/icons-material/Launch";
+import { getNetworkInfo } from "../../networks";
 
-export default function ContractPanel({ address }) {
+export default function ContractPanel({ address, networkId }) {
   const [copiedText, setCopiedText] = useState();
   const sxLabel = {
     fontSize: "14px",
@@ -20,6 +21,14 @@ export default function ContractPanel({ address }) {
     address?.substr(1, 5) +
     "..." +
     address?.substr(address?.length - 4, 4);
+
+  const openExplorer = () => {
+    const networkInfo = getNetworkInfo(networkId);
+    if(networkInfo !== null) {
+      const url = networkInfo.explorerURL + '/address/' + address;
+      window.open(url);
+    }
+  }
 
   return (
     <>
@@ -47,7 +56,10 @@ export default function ContractPanel({ address }) {
             </CopyToClipboard>
           </IconButton>
 
-          <IconButton sx={{ marginLeft: -0.5, marginTop: -1 }}>
+          <IconButton 
+            sx={{ marginLeft: -0.5, marginTop: -1 }}
+            onClick={() => openExplorer()}
+          >
             <LaunchIcon fontSize="small" />
           </IconButton>
         </Box>

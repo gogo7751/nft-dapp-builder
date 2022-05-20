@@ -35,6 +35,7 @@ export default function Dashboard() {
   const [alert, setAlert] = useState("");
   const [balance, setBalance] = useState(0);
   const [address, setAddress] = useState("");
+  const [networkId, setNetworkId] = useState(null);
   const [totalNFTCollection, setTotalNFTCollection] = useState(0);
   const [mintedToken, setMintedToken] = useState([]);
   const { project, setProject, setLoading } = useContext(UserContext);
@@ -88,6 +89,7 @@ export default function Dashboard() {
           const contractType = data?.contract_type;
           const currentSalePhaseIndex = data?.current_sale_phase;
           const salePhases = data?.sale_phases;
+          const contractNetworkId = data?.network;
 
           if (contractAddress || contractType) {
             contractService.setAddress(contractAddress);
@@ -97,9 +99,11 @@ export default function Dashboard() {
             );
             setBalance(contractBalance);
             setAddress(contractAddress);
+            setNetworkId(contractNetworkId);
           } else {
             setBalance(0);
             setAddress("");
+            setNetworkId(null);
           }
 
           if (salePhases) {
@@ -236,7 +240,7 @@ export default function Dashboard() {
 
           {/* Smart Contract */}
           <Grid item md={4} xs={12} sm={6}>
-            <ContractPanel address={address} />
+            <ContractPanel address={address} networkId={networkId} />
           </Grid>
         </Grid>
 
