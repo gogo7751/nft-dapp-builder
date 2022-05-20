@@ -302,12 +302,12 @@ export default function ContractEditor() {
         contractParams.splice(11, 2);
         return contractParams;
       case 6: // isHoldToken
-        contractParams.splice(9, 1);
         contractParams.splice(11, 1);
+        contractParams.splice(9, 1);
         return contractParams;
       case 7: // !isWhitelist && !isMysteryBox && !isHoldToken
-        contractParams.splice(9, 1);
         contractParams.splice(11, 2);
+        contractParams.splice(9, 1);
         return contractParams;
       default:
         return contractParams;
@@ -406,7 +406,9 @@ export default function ContractEditor() {
     setLoading(true);
 
     const contractParams = getContractParams();
+    const contractType = contractParams.shift();
     const contractAddress = await contractService.deployContract(
+      contractType,
       contractParams,
       (error) => {
         setAlert(error.message);
@@ -421,7 +423,7 @@ export default function ContractEditor() {
         contract: {
           ...data,
           contract_address: contractAddress,
-          contract_type: contractParams[0],
+          contract_type: contractType,
         },
       };
       setContractAddress(contractAddress);

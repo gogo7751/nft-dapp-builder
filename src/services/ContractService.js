@@ -47,9 +47,8 @@ export default class ContractService {
     return parseInt(chainId) === parseInt(networkId);
   };
 
-  deployContract = async (contractParams, errorHandler) => {
+  deployContract = async (contractType, contractParams, errorHandler) => {
     try {
-      const contractType = contractParams.shift();
       this.contractType = contractType;
       this.contractJSON = contracts[contractType];
 
@@ -74,7 +73,7 @@ export default class ContractService {
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
         this.address,
-        contracts[this.contractType].abi,
+        this.contractJSON.abi,
         signer
       );
       const balance = await contract.balanceOfContract();
