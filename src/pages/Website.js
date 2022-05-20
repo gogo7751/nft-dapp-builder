@@ -50,8 +50,31 @@ export default function Website() {
 
     if (address) {
       const current_sale_phase = website?.contract.current_sale_phase;
+      const hold_token_contract =
+        website?.contract.sale_phases[current_sale_phase].hold_token_contract;
 
-      if (website?.contract.sale_phases[current_sale_phase].whitelist) {
+      // check has token of contract
+      if (
+        website?.contract.sale_phases[current_sale_phase].hold_token === true
+      ) {
+        const hasTokenOfContract = await contractService.hasTokenOfContract(
+          address,
+          hold_token_contract,
+          (error) => {
+            setAlert(error.message);
+            return;
+          }
+        );
+        if (hasTokenOfContract === false) {
+          setAlert(`Need hold token of contract ${hold_token_contract}`);
+          return;
+        }
+      }
+
+      // check whitelist
+      if (
+        website?.contract.sale_phases[current_sale_phase].whitelist === true
+      ) {
         // get proofs
         const proofs = await WebsiteDataService.getProof(
           address,
@@ -69,6 +92,10 @@ export default function Website() {
         );
       } else {
         // mint token none whitelist
+        await contractService.mintToken(mintQuantity, price, (error) => {
+          setAlert(error.message);
+          return;
+        });
       }
     }
     setLoading(false);
