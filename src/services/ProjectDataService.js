@@ -39,6 +39,9 @@ class ProjectDataService {
       contract: {
         network: networkId,
       },
+      website: {
+        live: false,
+      }
     };
 
     // update user's project list
