@@ -21,6 +21,7 @@ export default function Mint(data) {
   const [mintQuantity, setMintQuantity] = useState(1);
   const [mintSoon, setMintSoon] = useState(false);
   const [counterVisible, setCounterVisible] = useState(true);
+  const [counterDate, setCounterDate] = useState(0);
   const current_sale_phase = data.contract?.current_sale_phase;
   const current_sale_phase_data =
     current_sale_phase !== undefined
@@ -38,7 +39,6 @@ export default function Mint(data) {
   const minted = data.minted ? data.minted : 0;
   const begin_date = current_sale_phase_data.begin_date;
   const end_date = current_sale_phase_data.end_date;
-  let counter_date = end_date;
 
   const styles = {
     paperContainer: {
@@ -48,9 +48,10 @@ export default function Mint(data) {
   };
 
   useEffect(() => {
+    setCounterDate(end_date);
     // mint soon
     if (current_sale_phase === 0 && begin_date * 1000 > +new Date()) {
-      counter_date = begin_date;
+      setCounterDate(begin_date);
       setMintSoon(true);
     }
     // last mint phase
@@ -99,7 +100,7 @@ export default function Mint(data) {
           </Typography>
         )}
 
-        {counterVisible && <Counter endDate={counter_date} />}
+        {counterVisible && <Counter endDate={counterDate} />}
 
         {!mintSoon && (
           <div>

@@ -22,6 +22,7 @@ export default function Website() {
   const [minted, setMinted] = useState(null);
   const [alert, setAlert] = useState("");
   const params = useParams();
+  const isPreview = params.appUrl === undefined;
 
   const initWebsite = async (link) => {
     let website = await WebsiteDataService.getData(link);
@@ -102,10 +103,10 @@ export default function Website() {
   };
 
   useEffect(() => {
-    !params.appUrl ? setWebsite(project) : initWebsite(params.appUrl);
-  }, []);
+    isPreview ? setWebsite(project) : initWebsite(params.appUrl);
+  }, [project]);
 
-  if (!website || !website.website.live) {
+  if (!website || (!isPreview && website?.website?.live === false)) {
     return <React.Fragment></React.Fragment>;
   }
   return (
