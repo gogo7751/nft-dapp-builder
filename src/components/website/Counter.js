@@ -29,7 +29,13 @@ export default function Counter(data) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(data.endDate));
 
   useEffect(() => {
-    setTimeout(() => setTimeLeft(calculateTimeLeft(data.endDate)), 1000);
+    const timeout = setTimeout(
+      () => setTimeLeft(calculateTimeLeft(data.endDate)),
+      1000
+    );
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [timeLeft]);
 
   return (
