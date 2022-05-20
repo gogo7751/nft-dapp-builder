@@ -265,6 +265,53 @@ export default function ContractEditor() {
     return saleStartTime;
   };
 
+  const filterParamsAccordingToType = (contractParams, contractType) => {
+    // contractParams = [
+    //   contractType,
+    //   tokenName,
+    //   tokenSymbol,
+    //   supplyAmount,
+    //   supplyStartIndex,
+    //   saleStartTime,
+    //   price,
+    //   maxQuantityPerMint,
+    //   mysteryBoxes,
+    //   baseURIs,
+    //   merkleTreeRoots,
+    //   holdTokenAddresses,
+    // ];
+    switch (contractType) {
+      case 0: // isWhitelist && isMysteryBox && isHoldToken
+        return contractParams;
+      case 1: // isWhitelist && isMysteryBox
+        contractParams.splice(contractParams.length - 1, 1);
+        return contractParams;
+      case 2: // isWhitelist && isHoldToken
+        contractParams.splice(9, 1);
+        return contractParams;
+      case 3: // isMysterybox && isHoldToken
+        contractParams.splice(11, 1);
+        return contractParams;
+      case 4: // isWhitelist
+        contractParams.splice(9, 1);
+        contractParams.splice(contractParams.length - 1, 1);
+        return contractParams;
+      case 5: // isMysteryBox
+        contractParams.splice(11, 2);
+        return contractParams;
+      case 6: // isHoldToken
+        contractParams.splice(9, 1);
+        contractParams.splice(11, 1);
+        return contractParams;
+      case 7: // !isWhitelist && !isMysteryBox && !isHoldToken
+        contractParams.splice(9, 1);
+        contractParams.splice(11, 2);
+        return contractParams;
+      default:
+        return contractParams;
+    }
+  };
+
   const getContractParams = () => {
     const tokenName = project["contract"]["token_name"];
     const tokenSymbol = project["contract"]["token_symbol"];
@@ -299,13 +346,9 @@ export default function ContractEditor() {
       isHoldToken
     );
 
-    // ===== TODO:
-    // REMOVE DUMMY WHITELIST, MYSTERYBOX BASE URI, HOLD TOKEN VALUES IN ELSE CONDITION WHEN 8 CONTRACT JSONs ARE CREATED =====
-
-    // if (isWhitelist) {
-    //   merkleTreeRoots = getMerkleRoots(salePhases);
-    // }
-    merkleTreeRoots = getMerkleRoots(salePhases);
+    if (isWhitelist) {
+      merkleTreeRoots = getMerkleRoots(salePhases);
+    }
 
     if (isMysteryBox) {
       const mysteryBoxMetadataCID =
@@ -318,38 +361,34 @@ export default function ContractEditor() {
       }
 
       baseURIs.push(`ipfs://${mysteryBoxMetadataCID}`);
-    } else {
-      baseURIs.push(
-        `ipfs://bafkreiefnzzhqm3udsbf54bh3epxyx7koans3lxzrj2crsdiyokl36a53a`
-      );
     }
 
     if (isHoldToken) {
       holdTokenAddresses = getTokenAddresses(salePhases);
-    } else {
-      for (let i = 0; i < salePhases.length; i++) {
-        holdTokenAddresses.push("0x0000000000000000000000000000000000000000");
-      }
     }
 
     const supplyStartIndex = getSupplyStartIndex(salePhases, supplyAmount);
 
     const saleStartTime = getSaleStartTime(salePhases);
 
-    return [
-      contractType,
-      tokenName,
-      tokenSymbol,
-      supplyAmount,
-      supplyStartIndex,
-      saleStartTime,
-      price,
-      maxQuantityPerMint,
-      mysteryBoxes,
-      baseURIs,
-      merkleTreeRoots,
-      holdTokenAddresses,
-    ];
+    const contractParams = filterParamsAccordingToType(
+      [
+        contractType,
+        tokenName,
+        tokenSymbol,
+        supplyAmount,
+        supplyStartIndex,
+        saleStartTime,
+        price,
+        maxQuantityPerMint,
+        mysteryBoxes,
+        baseURIs,
+        merkleTreeRoots,
+        holdTokenAddresses,
+      ],
+      contractType
+    );
+    return contractParams;
   };
 
   const deployContract = async () => {

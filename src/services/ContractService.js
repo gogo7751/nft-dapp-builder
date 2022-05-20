@@ -1,18 +1,23 @@
 import { ethers } from "ethers";
-import Web3 from "web3";
-import contractJSON from "../abis/NFTPod.json";
+import contractJSON0 from "../abis/NFTPod0.json";
+import contractJSON1 from "../abis/NFTPod1.json";
+import contractJSON2 from "../abis/NFTPod2.json";
+import contractJSON3 from "../abis/NFTPod3.json";
+import contractJSON4 from "../abis/NFTPod4.json";
+import contractJSON5 from "../abis/NFTPod5.json";
+import contractJSON6 from "../abis/NFTPod6.json";
+import contractJSON7 from "../abis/NFTPod7.json";
 import ERC20JSON from "../abis/ERC721.json";
 
-const beneficiaryAddress = "0xE7f72791D25ec97a94ccD0D32Aa5Ef1D9E7d83dE";
 const contracts = {
-  0: contractJSON,
-  1: contractJSON,
-  2: contractJSON,
-  3: contractJSON,
-  4: contractJSON,
-  5: contractJSON,
-  6: contractJSON,
-  7: contractJSON,
+  0: contractJSON0,
+  1: contractJSON1,
+  2: contractJSON2,
+  3: contractJSON3,
+  4: contractJSON4,
+  5: contractJSON5,
+  6: contractJSON6,
+  7: contractJSON7,
 };
 
 export default class ContractService {
@@ -44,23 +49,10 @@ export default class ContractService {
 
   deployContract = async (contractParams, errorHandler) => {
     try {
-      const [
-        contractType,
-        tokenName,
-        tokenSymbol,
-        supplyAmount,
-        supplyStartIndex,
-        saleStartTime,
-        price,
-        maxQuantityPerMint,
-        mysteryBoxes,
-        baseURIs,
-        merkleTreeRoots,
-        holdTokenAddresses,
-      ] = contractParams;
-
+      const contractType = contractParams.shift();
       this.contractType = contractType;
       this.contractJSON = contracts[contractType];
+
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const factory = new ethers.ContractFactory(
@@ -69,19 +61,7 @@ export default class ContractService {
         signer
       );
 
-      const contract = await factory.deploy(
-        tokenName,
-        tokenSymbol,
-        supplyAmount, // phases supply
-        supplyStartIndex, // phases supply start index
-        saleStartTime, // phases sale start time
-        price, // phases price in ETH
-        maxQuantityPerMint, // max quantity per mint
-        mysteryBoxes, // is mystery box enabled in phases
-        baseURIs, // Base URIs for different phase token + unrevealedURI (if mystery box enabled)
-        merkleTreeRoots, // Merkle Tree for different phase
-        holdTokenAddresses // Address for NFT/Token Check
-      );
+      const contract = await factory.deploy(...contractParams);
       return contract.address;
     } catch (err) {
       errorHandler(err);
@@ -225,9 +205,9 @@ export default class ContractService {
         this.contractJSON.abi,
         signer
       );
-      const priceInEth = ethers.utils.parseEther(price);
+      const priceInWei = ethers.utils.parseEther(price);
       await contract.mint(mintQuantity, proofs, {
-        value: (priceInEth * mintQuantity).toString(),
+        value: (priceInWei * mintQuantity).toString(),
       });
     } catch (err) {
       errorHandler(err);
@@ -243,9 +223,9 @@ export default class ContractService {
         this.contractJSON.abi,
         signer
       );
-      const priceInEth = ethers.utils.parseEther(price);
+      const priceInWei = ethers.utils.parseEther(price);
       await contract.mint(mintQuantity, {
-        value: (priceInEth * mintQuantity).toString(),
+        value: (priceInWei * mintQuantity).toString(),
       });
     } catch (err) {
       errorHandler(err);
