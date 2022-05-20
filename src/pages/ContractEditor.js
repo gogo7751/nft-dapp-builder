@@ -30,7 +30,7 @@ import SalePhaseDialog from "../components/SalePhaseDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import LaunchIcon from '@mui/icons-material/Launch';
+import LaunchIcon from "@mui/icons-material/Launch";
 import CheckIcon from "@mui/icons-material/Check";
 import AlertMessage from "../components/Alert";
 import { getNetworkInfo } from "../networks";
@@ -435,11 +435,11 @@ export default function ContractEditor() {
 
   const openExplorer = () => {
     const networkInfo = getNetworkInfo(networkId);
-    if(networkInfo !== null) {
-      const url = networkInfo.explorerURL + '/address/' + contractAddress;
+    if (networkInfo !== null) {
+      const url = networkInfo.explorerURL + "/address/" + contractAddress;
       window.open(url);
     }
-  }
+  };
 
   return (
     <>
@@ -449,16 +449,16 @@ export default function ContractEditor() {
           <Typography variant="h4" sx={{ marginLeft: 2, marginBottom: 2 }}>
             Smart Contract
           </Typography>
-          {
-            contractAddress ?
+          {contractAddress ? (
             <Button
               variant="contained"
               sx={{ height: "40px" }}
               startIcon={<LaunchIcon />}
               onClick={() => openExplorer()}
             >
-              { getContractAddress() }
-            </Button> :
+              {getContractAddress()}
+            </Button>
+          ) : (
             <Button
               variant="contained"
               sx={{ height: "40px" }}
@@ -466,8 +466,8 @@ export default function ContractEditor() {
               onClick={() => deployContract()}
             >
               Deploy Contract
-            </Button>                        
-          }
+            </Button>
+          )}
         </Box>
         <div className={classes.line}></div>
       </div>

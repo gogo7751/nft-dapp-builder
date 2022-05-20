@@ -205,28 +205,18 @@ export default class ContractService {
         this.contractJSON.abi,
         signer
       );
-      const priceInWei = ethers.utils.parseEther(price);
-      await contract.mint(mintQuantity, proofs, {
-        value: (priceInWei * mintQuantity).toString(),
-      });
-    } catch (err) {
-      errorHandler(err);
-    }
-  };
 
-  mintTokenNoProof = async (mintQuantity, price, errorHandler) => {
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        this.address,
-        this.contractJSON.abi,
-        signer
-      );
+      const contractWithWhitelist = [0, 1, 2, 4];
       const priceInWei = ethers.utils.parseEther(price);
-      await contract.mint(mintQuantity, {
-        value: (priceInWei * mintQuantity).toString(),
-      });
+      if (contractWithWhitelist.includes(this.contractType)) {
+        await contract.mint(mintQuantity, proofs, {
+          value: (priceInWei * mintQuantity).toString(),
+        });
+      } else {
+        await contract.mint(mintQuantity, {
+          value: (priceInWei * mintQuantity).toString(),
+        });
+      }
     } catch (err) {
       errorHandler(err);
     }
