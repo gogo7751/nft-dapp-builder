@@ -54,6 +54,7 @@ export default function SalesPanel({
   setContractMerkleRoot,
   flipContractMysteryBoxState,
   reserveContractToken,
+  isMysteryBoxesRevealed,
 }) {
   const { project, setProject, setLoading } = useContext(UserContext);
   const [salePhase, setSalePhase] = useState(null);
@@ -72,8 +73,9 @@ export default function SalesPanel({
 
   useEffect(() => {
     try {
-      const data = project["contract"];
-      if (data !== undefined) {
+      if (project !== null && project?.contract !== undefined) {
+        const data = project["contract"];
+
         salePhases.current = data?.sale_phases;
         currentPhase.current = data?.current_sale_phase;
         if (projectName.current !== project?.name) {
@@ -83,7 +85,13 @@ export default function SalesPanel({
           setSalePhase(salePhases.current[currentPhase.current]);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error?.message) {
+        setAlert(error.message);
+      } else {
+        setAlert(error);
+      }
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
@@ -313,10 +321,10 @@ export default function SalesPanel({
 
           <Button
             sx={{ marginTop: 2.5, height: "35px" }}
-            disabled={false}
+            disabled={isMysteryBoxesRevealed[phaseIndex]}
             onClick={() => flipContractMysteryBoxState(phaseIndex)}
           >
-            reveal
+            {isMysteryBoxesRevealed[phaseIndex] ? "revealed" : "reveal"}
           </Button>
         </Box>
 

@@ -142,7 +142,7 @@ contract NFTPod6 is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
                 tokenId < (phaseSupplyStartIndex[i] + phaseSupply[i])
             ) {
                 return
-                    string(abi.encodePacked(baseURIs[i], tokenId.toString()));
+                    string(abi.encodePacked(baseURIs[i], "/", tokenId.toString()));
             }
         }
     }

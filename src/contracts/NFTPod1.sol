@@ -162,7 +162,7 @@ contract NFTPod1 is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
                 isMysteryBoxRevealed[i]
             ) {
                 return
-                    string(abi.encodePacked(baseURIs[i], tokenId.toString()));
+                    string(abi.encodePacked(baseURIs[i], "/", tokenId.toString()));
             }
         }
 

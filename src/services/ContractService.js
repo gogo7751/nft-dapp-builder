@@ -128,6 +128,24 @@ export default class ContractService {
     }
   };
 
+  getMysteryBoxState = async (phaseIndex, errorHandler) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        this.address,
+        this.contractJSON.abi,
+        signer
+      );
+      const isMysteryBoxRevealed = await contract.isMysteryBoxRevealed(
+        phaseIndex
+      );
+      return isMysteryBoxRevealed;
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
   flipMysteryBoxState = async (phaseIndex, baseURI, errorHandler) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);

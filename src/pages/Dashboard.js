@@ -38,6 +38,7 @@ export default function Dashboard() {
   const [networkId, setNetworkId] = useState(null);
   const [totalNFTCollection, setTotalNFTCollection] = useState(0);
   const [mintedToken, setMintedToken] = useState([]);
+  const [isMysteryBoxesRevealed, setIsMysteryBoxesRevealed] = useState([]);
   const { project, setProject, setLoading } = useContext(UserContext);
 
   const errorHandler = (err) => {
@@ -78,6 +79,16 @@ export default function Dashboard() {
     return tokenSold;
   };
 
+  const getIsMysteryBoxesRevealed = async (phaseIndex) => {
+    const isMysteryBoxRevealed = await contractService.getMysteryBoxState(
+      phaseIndex,
+      (err) => {
+        setAlert(err.message);
+      }
+    );
+    return isMysteryBoxRevealed;
+  };
+
   useEffect(() => {
     try {
       (async () => {
@@ -90,6 +101,7 @@ export default function Dashboard() {
           const currentSalePhaseIndex = data?.current_sale_phase;
           const salePhases = data?.sale_phases;
           const contractNetworkId = data?.network;
+          const isMysteryBoxEnabled = data?.mystery_box_cid;
 
           if (contractAddress || contractType) {
             contractService.setAddress(contractAddress);
@@ -110,6 +122,7 @@ export default function Dashboard() {
             let totalAmount = 0;
             const phaseTokenStartIndex = [];
             const mintedToken = [];
+            const isRevealed = [];
 
             for (let i = 0; i < salePhases.length; i++) {
               const tokenStartIndex = calculateTokenStartIndex(
@@ -118,34 +131,42 @@ export default function Dashboard() {
                 salePhases[i]
               );
               phaseTokenStartIndex.push(tokenStartIndex);
+
               const tokenSold = await calculatePhaseTokenSold(
                 i,
                 salePhases[i],
                 phaseTokenStartIndex[i],
                 currentSalePhaseIndex
               );
-
               mintedToken.push(`${tokenSold}`);
+
+              if (salePhases[i].mystery_box) {
+                const isMysteryBoxEnabled = await getIsMysteryBoxesRevealed(i);
+                isRevealed.push(isMysteryBoxEnabled);
+              }
+
               totalAmount += salePhases[i].total_amount;
             }
 
+            setIsMysteryBoxesRevealed(isRevealed);
             setMintedToken(mintedToken);
             setTotalNFTCollection(totalAmount);
-
             setLoading(false);
           } else {
-            setLoading(false);
+            setIsMysteryBoxesRevealed([]);
             setMintedToken([]);
             setTotalNFTCollection(0);
+            setLoading(false);
           }
         }
       })();
     } catch (err) {
-      setLoading(false);
       setBalance(0);
       setAddress("");
+      setIsMysteryBoxesRevealed([]);
       setMintedToken([]);
       setTotalNFTCollection(0);
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
@@ -170,10 +191,18 @@ export default function Dashboard() {
     await contractService.flipToNextPhase(errorHandler);
   };
 
+  const getIsMysteryBoxRevealed = async (phaseIndex) => {
+    const isMysteryBoxRevealed = await contractService.getIsMysteryBoxRevealed(
+      phaseIndex
+    );
+    return isMysteryBoxRevealed;
+  };
+
   const flipContractMysteryBoxState = async (phaseIndex) => {
     if (project.contract?.sale_phases !== undefined) {
       const metadataCID = project.contract.sale_phases[phaseIndex].metadata_CID;
       const baseURI = `ipfs://${metadataCID}`;
+      // console.log("baseURI: ", baseURI)
 
       await contractService.flipMysteryBoxState(
         phaseIndex,
@@ -250,6 +279,7 @@ export default function Dashboard() {
           setContractMerkleRoot={setContractMerkleRoot}
           flipContractMysteryBoxState={flipContractMysteryBoxState}
           reserveContractToken={reserveContractToken}
+          isMysteryBoxesRevealed={isMysteryBoxesRevealed}
         />
 
         {/* Alert */}

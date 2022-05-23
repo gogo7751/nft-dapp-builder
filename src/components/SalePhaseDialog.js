@@ -161,8 +161,10 @@ export default function SalePhaseDialog({
               label="Begin Date (Local)"
               value={new Date(beginDate * 1000)}
               onChange={(date) => {
-                date.setSeconds(0);
-                setBeginDate(Math.round(date.getTime() / 1000));
+                if (date) {
+                  date.setSeconds(0);
+                  setBeginDate(Math.round(date.getTime() / 1000));
+                }
               }}
               renderInput={(params) => <TextField {...params} />}
             />
@@ -173,8 +175,10 @@ export default function SalePhaseDialog({
               label="End Date (Local)"
               value={new Date(endDate * 1000)}
               onChange={(date) => {
-                date.setSeconds(0);
-                setEndDate(Math.round(date.getTime() / 1000));
+                if (date) {
+                  date.setSeconds(0);
+                  setEndDate(Math.round(date.getTime() / 1000));
+                }
               }}
               renderInput={(params) => <TextField {...params} />}
             />

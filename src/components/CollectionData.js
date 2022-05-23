@@ -50,8 +50,8 @@ export default function CollectionData() {
   }, [project]);
 
   const getShortenId = (cid) => {
-    return cid?.substr(0, 5) + ' ... ' + cid?.substr(cid?.length - 5, 5);
-  };  
+    return cid?.substr(0, 5) + " ... " + cid?.substr(cid?.length - 5, 5);
+  };
 
   const getSalePhaseRow = (item, index) => {
     return (
@@ -59,7 +59,9 @@ export default function CollectionData() {
         key={index}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
-        <TableCell align="center">{item?.name === undefined ? 'Phase ' + index : item?.name}</TableCell>
+        <TableCell align="center">
+          {item?.name === undefined ? "Phase " + index : item?.name}
+        </TableCell>
         <TableCell align="center">
           <Link
             sx={{ marginLeft: 1, fontSize: 14 }}
@@ -67,7 +69,7 @@ export default function CollectionData() {
             rel="noopener noreferrer"
             target="_blank"
           >
-            { getShortenId(item?.image_CID) }
+            {getShortenId(item?.image_CID)}
           </Link>
         </TableCell>
         <TableCell align="center">
@@ -77,7 +79,7 @@ export default function CollectionData() {
             rel="noopener noreferrer"
             target="_blank"
           >
-            { getShortenId(item?.metadata_CID) }
+            {getShortenId(item?.metadata_CID)}
           </Link>
         </TableCell>
         <TableCell align="center">{item.total_amount}</TableCell>
@@ -141,7 +143,7 @@ export default function CollectionData() {
               rel="noopener noreferrer"
               target="_blank"
             >
-              { getShortenId(projectData.mystery_box_cid) }
+              {getShortenId(projectData.mystery_box_cid)}
             </Link>
           ) : (
             <Typography
@@ -166,7 +168,7 @@ export default function CollectionData() {
               rel="noopener noreferrer"
               target="_blank"
             >
-              { getShortenId(projectData.mystery_box_metadata_cid) }
+              {getShortenId(projectData.mystery_box_metadata_cid)}
             </Link>
           ) : (
             <Typography

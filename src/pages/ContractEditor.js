@@ -289,25 +289,25 @@ export default function ContractEditor() {
         contractParams.splice(contractParams.length - 1, 1);
         return contractParams;
       case 2: // isWhitelist && isHoldToken
-        contractParams.splice(9, 1);
+        contractParams.splice(8, 1);
         return contractParams;
       case 3: // isMysterybox && isHoldToken
-        contractParams.splice(11, 1);
+        contractParams.splice(10, 1);
         return contractParams;
       case 4: // isWhitelist
-        contractParams.splice(9, 1);
+        contractParams.splice(8, 1);
         contractParams.splice(contractParams.length - 1, 1);
         return contractParams;
       case 5: // isMysteryBox
-        contractParams.splice(11, 2);
+        contractParams.splice(10, 2);
         return contractParams;
       case 6: // isHoldToken
-        contractParams.splice(11, 1);
-        contractParams.splice(9, 1);
+        contractParams.splice(10, 1);
+        contractParams.splice(8, 1);
         return contractParams;
       case 7: // !isWhitelist && !isMysteryBox && !isHoldToken
-        contractParams.splice(11, 2);
-        contractParams.splice(9, 1);
+        contractParams.splice(10, 2);
+        contractParams.splice(8, 1);
         return contractParams;
       default:
         return contractParams;
@@ -335,7 +335,7 @@ export default function ContractEditor() {
       price.push(ethers.utils.parseEther(salePhases[i]["mint_price"]));
       supplyAmount.push(salePhases[i]["total_amount"]);
       mysteryBoxes.push(salePhases[i]["mystery_box"]);
-      baseURIs.push(`ipfs://${salePhases[i]["metadata_CID"]}/`);
+      baseURIs.push(`ipfs://${salePhases[i]["metadata_CID"]}`);
 
       isMysteryBox = isMysteryBox || salePhases[i]["mystery_box"];
       isWhitelist = isWhitelist || salePhases[i]["whitelist"];
