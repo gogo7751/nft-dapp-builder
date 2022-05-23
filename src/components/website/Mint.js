@@ -45,6 +45,9 @@ export default function Mint(data) {
       backgroundImage: 'url("' + data.mint.image + '")',
       backgroundSize: "cover",
     },
+    paperBackgroundLayer: {
+      backgroundColor: "rgba(0, 0, 0, 0.3)",
+    },
   };
 
   useEffect(() => {
@@ -64,8 +67,8 @@ export default function Mint(data) {
   }, []);
 
   return (
-    <div>
-      <Box style={styles.paperContainer} sx={{ py: 4 }}>
+    <div style={styles.paperContainer}>
+      <Box style={styles.paperBackgroundLayer} sx={{ py: 4 }}>
         <Typography
           variant="h4"
           color="textSecondary"
