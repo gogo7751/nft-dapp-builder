@@ -1,5 +1,5 @@
 import { db } from "../firebase-config";
-import { getDoc, setDoc, doc, deleteDoc } from "firebase/firestore";
+import { getDoc, setDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import MerkleTree from "merkletreejs";
 import keccak256 from "keccak256";
 
@@ -8,12 +8,6 @@ class WebsiteDataService {
     const websiteRef = doc(db, "websites", link);
     const websiteDoc = await getDoc(websiteRef);
     return websiteDoc.data();
-  };
-
-  setData = async (link, project_id) => {
-    const projRef = doc(db, "projects", project_id);
-    const projDoc = await getDoc(projRef);
-    await setDoc(doc(db, "websites", link), projDoc.data());
   };
 
   syncData = async (link, userToken, project_id) => {
@@ -34,6 +28,10 @@ class WebsiteDataService {
     } else {
       console.log("user token mismatch");
     }
+  };
+
+  updateData = async (link, data) => {
+    await updateDoc(doc(db, "websites", link), data);
   };
 
   deleteData = async (link) => {

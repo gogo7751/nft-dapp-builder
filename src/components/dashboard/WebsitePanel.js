@@ -7,6 +7,7 @@ import Panel from "../Panel";
 import Switch from "../Switch";
 import EditIcon from "@mui/icons-material/Edit";
 import LaunchIcon from "@mui/icons-material/Launch";
+import WebsiteDataService from "../../services/WebsiteDataService";
 
 export default function WebsitePanel() {
   const { project } = useContext(UserContext);
@@ -45,6 +46,14 @@ export default function WebsitePanel() {
     window.open(websiteUrl);
   };
 
+  const onChangeHandler = (event) => {
+    const checked = event.target.checked;
+
+    WebsiteDataService.updateData(project.website.link, {
+      website: { ...project.website, live: checked },
+    });
+  };
+
   return (
     <>
       <Panel top={2} height={8}>
@@ -59,6 +68,7 @@ export default function WebsitePanel() {
               label="live"
               field="website"
               subField="live"
+              onChangeHandler={onChangeHandler}
             />
           )}
         </Box>

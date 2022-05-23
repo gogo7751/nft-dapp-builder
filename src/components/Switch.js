@@ -3,7 +3,13 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { UserContext } from "../UserContext";
 import ProjectDataService from "../services/ProjectDataService";
 
-export default function SwitchInput({ sx, label, field, subField }) {
+export default function SwitchInput({
+  sx,
+  label,
+  field,
+  subField,
+  onChangeHandler
+}) {
   const { project, setProject } = useContext(UserContext);
   const [value, setValue] = useState(false);
 
@@ -30,6 +36,9 @@ export default function SwitchInput({ sx, label, field, subField }) {
       };
       setProject(newProjectData);
       ProjectDataService.updateProjectData(newProjectData);
+      if (onChangeHandler !== undefined) {
+        onChangeHandler(event);
+      }
     } catch (error) {
       const newProjectData = {
         ...project,
