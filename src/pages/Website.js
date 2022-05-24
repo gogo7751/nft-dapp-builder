@@ -13,8 +13,57 @@ import AlertMessage from "../components/Alert";
 import WebsiteDataService from "../services/WebsiteDataService";
 import AccountService from "../services/AccountService";
 import ContractService from "../services/ContractService";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const contractService = new ContractService();
+
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 0, // Phone
+    md: 768, // Tablet/Laptop
+    lg: 1500, // Desktop
+    xl: 2000
+  }
+};
+
+const theme = createTheme({
+  // breakpoints,
+  palette: {
+    primary: {
+      main: '#FF0F67',
+    },
+    secondary: {
+      main: '#262626',
+    },
+    info: {
+      main: '#fff',
+    },
+    text: {
+      primary: '#000',
+      secondary: '#606060',
+    }
+  },
+  typography: {
+    fontFamily: 'Quicksand',
+    fontWeightLight: 400,
+    fontWeightRegular: 500,
+    fontWeightMedium: 600,
+    fontWeightBold: 700,
+    h3: {
+      fontSize: "3rem",
+      fontWeight: 600,
+      [`@media screen and (max-width: 800px)`]: {
+        fontSize: "2rem"
+      }
+    },
+    h5: {
+      [`@media screen and (max-width: 800px)`]: {
+        fontSize: "1.2rem"
+      }
+    },    
+  },
+});
 
 export default function Website() {
   const { project, setLoading } = useContext(UserContext);
@@ -110,6 +159,7 @@ export default function Website() {
     return <React.Fragment></React.Fragment>;
   }
   return (
+    <ThemeProvider theme={theme}>
     <React.Fragment>
       {<NavBar projectInfo={website.project_info} />}
       {
@@ -139,5 +189,6 @@ export default function Website() {
       {/* Alert */}
       <AlertMessage alertState={{ alert, setAlert }} />
     </React.Fragment>
+    </ThemeProvider>
   );
 }

@@ -13,21 +13,22 @@ export default function Info(data) {
           <Grid
             item
             xs={12}
-            sm={data.info.image ? 6 : 12}
-            md={data.info.image ? 6 : 12}
+            sm={data.info.image ? 12 : 12}
+            md={data.info.image ? 7 : 12}
           >
-            <Typography sx={{ pb: 2 }} variant="h3" component="h3">
+            <Typography sx={{pb:4}} variant="h3" color="text.primary">
               {data.info.title}
             </Typography>
-            <Typography variant="body1" color="textSecondary">
+
+            <Typography variant="h5" color="text.secondary">
               {data.info.desc}
             </Typography>
           </Grid>
           {data.info.image && (
-            <Grid item xs={12} sm={6} md={6}>
-              <Paper variant="outlined">
+            <Grid item xs={12} sm={12} md={5}>
+              <Box>
                 <img width="100%" src={data.info.image} />
-              </Paper>
+              </Box>
             </Grid>
           )}
         </Grid>
