@@ -47,7 +47,7 @@ export default function Info(data) {
             <CardMedia
               component="iframe"
               allowFullScreen
-              image={data.info.youtube ? data.info.youtube : ''}
+              image={data.info.youtube ? `https://www.youtube.com/embed/${data.info.youtube}` : ''}
               sx={{ position: 'absolute', width: '100%', height: '100%' }}
             />
           </Grid>

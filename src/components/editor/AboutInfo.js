@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, InputAdornment } from "@mui/material";
 import { Label } from "../Label";
 import Panel from "../Panel";
 import TextInput from "../TextInput";
@@ -44,10 +44,17 @@ export default function AboutInfo() {
 
         {/* Youtube */}
         <TextInput
-          label="Youtube link"
-          placeholder="Enter youtube link"
+          label="Youtube video id"
+          placeholder="Enter youtube id"
           field="description_sction"
           subField="youtube"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                https://www.youtube.com/embed/
+              </InputAdornment>
+            ),
+          }}
         />
       </Panel>
     </Container>

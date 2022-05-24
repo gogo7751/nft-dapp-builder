@@ -12,6 +12,7 @@ export default function TextInput({
   gutterBottom,
   multiline,
   disabled,
+  InputProps
 }) {
   const { project, setProject } = useContext(UserContext);
   const [value, setValue] = useState(null);
@@ -76,6 +77,7 @@ export default function TextInput({
         onChange={handleTextChange}
         InputLabelProps={{ shrink: true }}
         disabled={disabled}
+        InputProps={InputProps}
       />
     );
   };
@@ -95,6 +97,7 @@ export default function TextInput({
         InputLabelProps={{ shrink: true }}
         rows={4}
         multiline
+        InputProps={InputProps}
       />
     );
   };
